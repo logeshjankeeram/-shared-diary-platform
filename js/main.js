@@ -14,6 +14,21 @@ class DiaryUI {
         this.setDefaultDate();
         this.requestNotificationPermission();
         this.loadFromLocalStorage();
+        this.setMobileBackground();
+    }
+
+    // Set mobile background image
+    setMobileBackground() {
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const isSmallScreen = window.innerWidth <= 768;
+
+        if (isMobile || isSmallScreen) {
+            document.body.style.backgroundImage = "url('/assets/phone.png')";
+            console.log('Mobile device detected, using phone.png background');
+        } else {
+            document.body.style.backgroundImage = "url('/assets/forest.png')";
+            console.log('Desktop device detected, using forest.png background');
+        }
     }
 
     // Setup all event listeners
@@ -65,6 +80,12 @@ class DiaryUI {
             if (e.target === document.getElementById('feedbackModal')) {
                 this.hideFeedbackModal();
             }
+        });
+
+        // Window resize for background switching
+        window.addEventListener('resize', () => this.setMobileBackground());
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => this.setMobileBackground(), 100);
         });
     }
 
