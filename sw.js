@@ -1,15 +1,14 @@
 // Service Worker for Shared Diary Platform
 
-const CACHE_NAME = 'burner-diary-v1.0.5';
+const CACHE_NAME = 'burner-diary-v1.1.1';
 const urlsToCache = [
     '/',
     '/index.html',
-    '/css/style.css?v=1.0.5',
-    '/js/main.js?v=1.0.5',
-    '/js/diary.js?v=1.0.5',
-    '/js/supabase.js?v=1.0.5',
-    '/js/supabase.js?v=1.0.5',
-    '/js/tunnel-bear.js?v=1.0.5',
+    '/css/style.css?v=1.1.1',
+    '/js/main.js?v=1.1.1',
+    '/js/diary.js?v=1.1.1',
+    '/js/supabase.js?v=1.1.1',
+    '/js/tunnel-bear.js?v=1.1.1',
     '/assets/icon.svg',
     '/manifest.json'
 ];
@@ -17,11 +16,21 @@ const urlsToCache = [
 // Install event
 self.addEventListener('install', event => {
     event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(cache => {
-                console.log('Opened cache');
-                return cache.addAll(urlsToCache);
-            })
+        // Clear all existing caches first
+        caches.keys().then(cacheNames => {
+            return Promise.all(
+                cacheNames.map(cacheName => {
+                    console.log('Clearing old cache:', cacheName);
+                    return caches.delete(cacheName);
+                })
+            );
+        }).then(() => {
+            // Then open new cache and add URLs
+            return caches.open(CACHE_NAME);
+        }).then(cache => {
+            console.log('Opened new cache:', CACHE_NAME);
+            return cache.addAll(urlsToCache);
+        })
     );
 });
 
