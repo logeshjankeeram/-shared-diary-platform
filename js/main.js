@@ -199,7 +199,9 @@ class DiaryUI {
                 this.saveToLocalStorage();
                 this.showDiaryInterface();
                 console.log('Diary interface shown, initializing diary manager...');
+                console.log('diaryManager object:', window.diaryManager);
                 window.diaryManager.init(this.currentDiary, this.currentUser);
+                console.log('Diary manager initialized successfully');
                 this.showMessage('Diary created successfully!', 'success');
             } else {
                 this.showMessage(result.error, 'error');
@@ -357,6 +359,10 @@ class DiaryUI {
 
     // Show diary interface
     showDiaryInterface() {
+        console.log('showDiaryInterface called');
+        console.log('diarySelection element:', document.getElementById('diarySelection'));
+        console.log('diaryInterface element:', document.getElementById('diaryInterface'));
+
         document.getElementById('diarySelection').classList.add('hidden');
         document.getElementById('diaryInterface').classList.remove('hidden');
 
@@ -364,6 +370,13 @@ class DiaryUI {
         document.getElementById('currentDiaryId').textContent = this.currentDiary.diary_id;
         document.getElementById('currentDiaryType').textContent = this.currentDiary.type;
         document.getElementById('currentUsers').textContent = this.currentDiary.users.join(', ');
+
+        console.log('Diary interface should now be visible');
+        console.log('Current diary info updated:', {
+            id: this.currentDiary.diary_id,
+            type: this.currentDiary.type,
+            users: this.currentDiary.users
+        });
 
         // Show timeline if there are unlocked entries
         if (window.diaryManager.timelineDates.length > 0) {
