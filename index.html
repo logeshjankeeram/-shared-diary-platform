@@ -46,12 +46,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/3.3.0/sha256.min.js"></script>
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/style.css?v=1.0.4">
+    <link rel="stylesheet" href="css/style.css?v=1.0.5">
 
     <script>
-        // Nuclear timestamp for mobile cache busting
+        // Chrome-specific nuclear timestamp for cache busting
         const timestamp = Date.now();
-        const mobileTimestamp = navigator.userAgent.includes('Mobile') ? Date.now() : timestamp;
+        const isChrome = /Chrome/.test(navigator.userAgent) && !/Edge/.test(navigator.userAgent);
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const chromeTimestamp = isChrome ? Date.now() : timestamp;
+        const mobileTimestamp = isMobile ? Date.now() : timestamp;
 
         tailwind.config = {
             theme: {
@@ -384,10 +387,14 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="js/supabase.js?v=1.0.4&t=${mobileTimestamp}&mobile=1"></script>
-    <script src="js/diary.js?v=1.0.4&t=${mobileTimestamp}&mobile=1"></script>
-    <script src="js/main.js?v=1.0.4&t=${mobileTimestamp}&mobile=1"></script>
-    <script src="js/tunnel-bear.js?v=1.0.4&t=${mobileTimestamp}&mobile=1"></script>
+    <script
+        src="js/supabase.js?v=1.0.5&t=${chromeTimestamp}&chrome=${isChrome ? 1 : 0}&mobile=${isMobile ? 1 : 0}"></script>
+    <script
+        src="js/diary.js?v=1.0.5&t=${chromeTimestamp}&chrome=${isChrome ? 1 : 0}&mobile=${isMobile ? 1 : 0}"></script>
+    <script
+        src="js/main.js?v=1.0.5&t=${chromeTimestamp}&chrome=${isChrome ? 1 : 0}&mobile=${isMobile ? 1 : 0}"></script>
+    <script
+        src="js/tunnel-bear.js?v=1.0.5&t=${chromeTimestamp}&chrome=${isChrome ? 1 : 0}&mobile=${isMobile ? 1 : 0}"></script>
 </body>
 
 </html>

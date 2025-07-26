@@ -558,16 +558,18 @@ class DiaryUI {
 
 // Initialize UI when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    // Nuclear mobile cache busting
+    // Chrome-specific nuclear cache busting
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const isChrome = /Chrome/.test(navigator.userAgent) && !/Edge/.test(navigator.userAgent);
     console.log('Device type:', isMobile ? 'Mobile' : 'Desktop');
+    console.log('Browser:', isChrome ? 'Chrome' : 'Other');
 
-    // Nuclear cache clearing - delete ALL caches
+    // Chrome nuclear cache clearing - delete ALL caches
     if ('caches' in window) {
         caches.keys().then(cacheNames => {
             console.log('Found caches:', cacheNames);
             cacheNames.forEach(cacheName => {
-                console.log('NUCLEAR: Deleting cache:', cacheName);
+                console.log('CHROME NUCLEAR: Deleting cache:', cacheName);
                 caches.delete(cacheName);
             });
         });
@@ -586,11 +588,63 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Set new version
-    localStorage.setItem('lastVersion', '1.0.4');
+    localStorage.setItem('lastVersion', '1.0.5');
     localStorage.setItem('lastLoad', Date.now().toString());
+    localStorage.setItem('browser', isChrome ? 'chrome' : 'other');
 
-    // Mobile nuclear option
-    if (isMobile) {
+    // Chrome-specific nuclear option
+    if (isChrome) {
+        console.log('CHROME NUCLEAR OPTION ACTIVATED');
+
+        // Force reload with Chrome-specific cache-busting parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const hasFresh = urlParams.has('fresh');
+        const hasChrome = urlParams.has('chrome');
+        const hasNuclear = urlParams.has('nuclear');
+        const hasMobile = urlParams.has('mobile');
+
+        if (!hasFresh || !hasChrome || !hasNuclear || (isMobile && !hasMobile)) {
+            const timestamp = Date.now();
+            const random = Math.random().toString(36).substring(7);
+            const chromeParam = isChrome ? '&chrome=1' : '';
+            const mobileParam = isMobile ? '&mobile=1' : '';
+            const freshUrl = `${window.location.origin}${window.location.pathname}?fresh=${timestamp}&nuclear=1&r=${random}${chromeParam}${mobileParam}`;
+            console.log('CHROME NUCLEAR: forcing fresh load to:', freshUrl);
+            window.location.replace(freshUrl);
+            return;
+        }
+
+        // Chrome-specific cache clearing
+        if ('caches' in window) {
+            caches.keys().then(cacheNames => {
+                cacheNames.forEach(cacheName => {
+                    console.log('CHROME NUCLEAR: Deleting cache:', cacheName);
+                    caches.delete(cacheName);
+                });
+            });
+        }
+
+        // Force reload all scripts with Chrome-specific parameters
+        const scripts = document.querySelectorAll('script[src]');
+        scripts.forEach(script => {
+            const originalSrc = script.src;
+            const newSrc = originalSrc + (originalSrc.includes('?') ? '&' : '?') + 'chrome=' + Date.now() + '&nuclear=1';
+            script.src = newSrc;
+            console.log('CHROME NUCLEAR: Updated script src:', newSrc);
+        });
+
+        // Chrome-specific service worker unregister
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(registrations => {
+                registrations.forEach(registration => {
+                    console.log('CHROME NUCLEAR: Unregistering service worker');
+                    registration.unregister();
+                });
+            });
+        }
+
+    } else if (isMobile) {
+        // Mobile nuclear option (non-Chrome)
         console.log('MOBILE NUCLEAR OPTION ACTIVATED');
 
         // Force reload with multiple cache-busting parameters
@@ -644,7 +698,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Handle service worker for PWA functionality
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js?v=1.0.4')
+        navigator.serviceWorker.register('/sw.js?v=1.0.5')
             .then(registration => {
                 console.log('SW registered: ', registration);
 
