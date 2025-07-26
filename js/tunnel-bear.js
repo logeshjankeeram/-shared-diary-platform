@@ -74,8 +74,8 @@ class TunnelBear {
 
     createBearContainer() {
         console.log('Creating bear container...');
-        // Find the bear avatar container in the form
-        const bearContainer = document.querySelector('#diaryForm .w-\\[130px\\] .absolute');
+        // Find the bear avatar container in the join form (primary form)
+        const bearContainer = document.querySelector('#joinDiaryForm .w-\\[130px\\] .absolute');
         console.log('Bear container found:', bearContainer);
 
         if (bearContainer) {
@@ -91,8 +91,8 @@ class TunnelBear {
             this.bearElement = bearImg;
             console.log('Bear element created and added:', this.bearElement);
         } else {
-            console.error('Bear container not found in form');
-            console.log('Available elements with #diaryForm:', document.querySelector('#diaryForm'));
+            console.error('Bear container not found in join form');
+            console.log('Available elements with #joinDiaryForm:', document.querySelector('#joinDiaryForm'));
             console.log('Available elements with .w-[130px]:', document.querySelectorAll('.w-\\[130px\\]'));
         }
     }
@@ -255,9 +255,9 @@ class TunnelBear {
 
     getFieldType(field) {
         const id = field.id || '';
-        if (id === 'diaryId') return 'diaryId';
-        if (id === 'userName') return 'userName';
-        if (id === 'userPassword') return 'userPassword';
+        if (id === 'joinDiaryId' || id === 'createDiaryId') return 'diaryId';
+        if (id === 'createUserName') return 'userName';
+        if (id === 'joinUserPassword' || id === 'createUserPassword') return 'userPassword';
         if (id === 'entryPassword') return 'password';
         if (id === 'entryContent') return 'content';
         if (id === 'feedbackName' || id === 'feedbackEmail' || id === 'feedbackMessage') return 'feedback';

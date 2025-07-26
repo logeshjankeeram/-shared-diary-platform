@@ -23,8 +23,13 @@ class DiaryUI {
         document.getElementById('createDiaryBtn')?.addEventListener('click', () => this.createDiary());
         document.getElementById('newDiaryBtn')?.addEventListener('click', () => this.startNewDiary());
 
-        // User password toggle
-        document.getElementById('toggleUserPassword')?.addEventListener('click', () => this.toggleUserPasswordVisibility());
+        // Form switching
+        document.getElementById('showCreateFormBtn')?.addEventListener('click', () => this.showCreateForm());
+        document.getElementById('showJoinFormBtn')?.addEventListener('click', () => this.showJoinForm());
+
+        // Password visibility toggle
+        document.getElementById('toggleJoinPassword')?.addEventListener('click', () => this.toggleJoinPasswordVisibility());
+        document.getElementById('toggleCreatePassword')?.addEventListener('click', () => this.toggleCreatePasswordVisibility());
 
         // Entry creation
         document.getElementById('submitEntryBtn')?.addEventListener('click', () => this.submitEntry());
@@ -160,10 +165,10 @@ class DiaryUI {
 
     // Create a new diary
     async createDiary() {
-        const diaryId = document.getElementById('diaryId').value.trim();
-        const userName = document.getElementById('userName').value.trim();
-        const userPassword = document.getElementById('userPassword').value;
-        const diaryType = document.getElementById('diaryType').value;
+        const diaryId = document.getElementById('createDiaryId').value.trim();
+        const userName = document.getElementById('createUserName').value.trim();
+        const userPassword = document.getElementById('createUserPassword').value;
+        const diaryType = document.getElementById('createDiaryType').value;
 
         if (!this.validateInputs(diaryId, userName, userPassword)) return;
 
@@ -190,11 +195,10 @@ class DiaryUI {
 
     // Join an existing diary
     async joinDiary() {
-        const diaryId = document.getElementById('diaryId').value.trim();
-        const userName = document.getElementById('userName').value.trim();
-        const userPassword = document.getElementById('userPassword').value;
+        const diaryId = document.getElementById('joinDiaryId').value.trim();
+        const userPassword = document.getElementById('joinUserPassword').value;
 
-        if (!this.validateInputs(diaryId, userName, userPassword)) return;
+        if (!this.validateInputs(diaryId, '', userPassword)) return;
 
         try {
             this.showLoading('Joining diary...');
@@ -217,10 +221,44 @@ class DiaryUI {
         }
     }
 
-    // Toggle user password visibility
-    toggleUserPasswordVisibility() {
-        const passwordInput = document.getElementById('userPassword');
-        const toggleButton = document.getElementById('toggleUserPassword');
+    // Form switching methods
+    showCreateForm() {
+        document.getElementById('joinDiaryForm').classList.add('hidden');
+        document.getElementById('createDiaryForm').classList.remove('hidden');
+    }
+
+    showJoinForm() {
+        document.getElementById('createDiaryForm').classList.add('hidden');
+        document.getElementById('joinDiaryForm').classList.remove('hidden');
+    }
+
+    // Toggle join password visibility
+    toggleJoinPasswordVisibility() {
+        const passwordInput = document.getElementById('joinUserPassword');
+        const toggleButton = document.getElementById('toggleJoinPassword');
+
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleButton.innerHTML = `
+                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
+                </svg>
+            `;
+        } else {
+            passwordInput.type = 'password';
+            toggleButton.innerHTML = `
+                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+            `;
+        }
+    }
+
+    // Toggle create password visibility
+    toggleCreatePasswordVisibility() {
+        const passwordInput = document.getElementById('createUserPassword');
+        const toggleButton = document.getElementById('toggleCreatePassword');
 
         if (passwordInput.type === 'password') {
             passwordInput.type = 'text';
@@ -242,12 +280,13 @@ class DiaryUI {
 
     // Validate input fields
     validateInputs(diaryId, userName, userPassword = '') {
-        if (!userName) {
-            this.showMessage('Please enter your name', 'error');
-            this.addErrorClass('userName');
+        // For joining, userName can be empty (will be retrieved from diary)
+        if (userName && userName.length < 2) {
+            this.showMessage('Name must be at least 2 characters', 'error');
+            this.addErrorClass('createUserName');
             return false;
         }
-        this.removeErrorClass('userName');
+        this.removeErrorClass('createUserName');
 
         if (!diaryId) {
             this.showMessage('Please enter a Diary ID', 'error');
@@ -262,12 +301,6 @@ class DiaryUI {
             return false;
         }
         this.removeErrorClass('userPassword');
-
-        if (userName.length < 2) {
-            this.showMessage('Name must be at least 2 characters', 'error');
-            this.addErrorClass('userName');
-            return false;
-        }
 
         if (diaryId.length < 3) {
             this.showMessage('Diary ID must be at least 3 characters', 'error');
@@ -314,10 +347,15 @@ class DiaryUI {
         document.getElementById('timelineView').classList.add('hidden');
 
         // Clear form fields
-        document.getElementById('diaryId').value = '';
-        document.getElementById('userName').value = '';
-        document.getElementById('userPassword').value = '';
-        document.getElementById('diaryType').value = 'couple';
+        document.getElementById('joinDiaryId').value = '';
+        document.getElementById('joinUserPassword').value = '';
+        document.getElementById('createDiaryId').value = '';
+        document.getElementById('createUserName').value = '';
+        document.getElementById('createUserPassword').value = '';
+        document.getElementById('createDiaryType').value = 'couple';
+
+        // Show join form by default
+        this.showJoinForm();
     }
 
     // Submit a new entry
