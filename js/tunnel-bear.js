@@ -132,6 +132,13 @@ class TunnelBear {
                 this.handleBackgroundClick();
             }
         });
+
+        // Listen for New Diary and Register button clicks
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('#newDiaryBtn, #showCreateFormBtn')) {
+                this.handleNewDiaryClick();
+            }
+        });
     }
 
     handleFieldFocus(field) {
@@ -251,6 +258,21 @@ class TunnelBear {
     handlePasswordToggle(button) {
         this.showPassword = !this.showPassword;
         this.updateBearAnimation();
+    }
+
+    // Handle New Diary and Register button clicks
+    handleNewDiaryClick() {
+        console.log('New Diary/Register button clicked, showing bear animation');
+        this.showBear();
+        this.clearTimeouts();
+
+        // Start with watch_bear_0, then animate through watch sequence
+        this.setCurrentBearImage(this.watchBearImages[0]);
+
+        // Animate through initial watch sequence (frames 1-2)
+        setTimeout(() => {
+            this.animateInitialWatchSequence();
+        }, 100);
     }
 
     getFieldType(field) {
