@@ -167,7 +167,8 @@ class TunnelBear {
 
         if (fieldType === 'userName') {
             this.emailLength = field.value.length;
-            this.updateBearAnimation();
+            // Update bear image based on input length
+            this.updateWatchingBearImage();
         } else if (fieldType === 'diaryId' || fieldType === 'userPassword') {
             // Keep bear hidden while typing in sensitive fields
             console.log('Keeping bear hidden while typing in sensitive field');
@@ -287,6 +288,18 @@ class TunnelBear {
         }
 
         this.prevShowPassword = this.showPassword;
+    }
+
+    updateWatchingBearImage() {
+        console.log('Updating watching bear image, emailLength:', this.emailLength);
+        const progress = Math.min(this.emailLength / 30, 1);
+        const index = Math.min(
+            Math.floor(progress * (this.watchBearImages.length - 1)),
+            this.watchBearImages.length - 1,
+        );
+        const imageIndex = Math.max(1, index); // Start from watch_bear_1, not watch_bear_0
+        console.log('Setting bear image to index:', imageIndex, 'image:', this.watchBearImages[imageIndex]);
+        this.setCurrentBearImage(this.watchBearImages[imageIndex]);
     }
 
     animateWatchingBearImages() {
