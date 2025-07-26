@@ -2,7 +2,7 @@
 
 /* Background image */
 body {
-    background: url('/pastel.png') no-repeat center center fixed;
+    background: linear-gradient(135deg, #86b049 0%, #a8d08d 50%, #c8e6c9 100%), url('/pastel.png') no-repeat center center fixed;
     background-size: cover;
     min-height: 100vh;
     margin: 0;
