@@ -293,26 +293,11 @@ class TunnelBear {
     updateWatchingBearImage() {
         console.log('Updating watching bear image, emailLength:', this.emailLength);
 
-        // Clear any existing animation timeouts
-        this.clearTimeouts();
+        // Direct 1:1 mapping: 1 character = watch_bear_2, 2 characters = watch_bear_3, etc.
+        const frameIndex = Math.min(this.emailLength + 1, this.watchBearImages.length - 1); // +1 because we start from watch_bear_1
 
-        // Calculate target frame based on input length
-        const progress = Math.min(this.emailLength / 30, 1);
-        const targetIndex = Math.min(
-            Math.floor(progress * (this.watchBearImages.length - 1)),
-            this.watchBearImages.length - 1,
-        );
-        const targetImageIndex = Math.max(1, targetIndex); // Start from watch_bear_1, not watch_bear_0
-
-        // Get current frame index
-        const currentSrc = this.bearElement?.src || '';
-        const currentIndex = this.watchBearImages.findIndex(img => img === currentSrc);
-        const startIndex = currentIndex > 0 ? currentIndex : 1; // Default to watch_bear_1 if not found
-
-        console.log('Smooth animation from frame', startIndex, 'to frame', targetImageIndex);
-
-        // Animate smoothly from current frame to target frame
-        this.animateToFrame(startIndex, targetImageIndex);
+        console.log('Setting bear to frame:', frameIndex, 'for', this.emailLength, 'characters');
+        this.setCurrentBearImage(this.watchBearImages[frameIndex]);
     }
 
     animateToFrame(startIndex, targetIndex) {
