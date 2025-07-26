@@ -28,6 +28,8 @@ class TunnelBear {
     }
 
     loadBearImages() {
+        console.log('Loading bear images...');
+
         // Load watch bear images (21 images: 0-20)
         for (let i = 0; i <= 20; i++) {
             this.watchBearImages.push(`assets/watch_bear_${i}.png`);
@@ -42,6 +44,13 @@ class TunnelBear {
         for (let i = 0; i <= 3; i++) {
             this.peakBearImages.push(`assets/peak_bear_${i}.png`);
         }
+
+        console.log('Loaded images:', {
+            watch: this.watchBearImages.length,
+            hide: this.hideBearImages.length,
+            peak: this.peakBearImages.length
+        });
+        console.log('Hide bear images:', this.hideBearImages);
     }
 
     createBearContainer() {
@@ -64,10 +73,20 @@ class TunnelBear {
     }
 
     setupEventListeners() {
-        // Listen for form field interactions
+        // Single focusin listener that handles both regular focus and sensitive field focus
         document.addEventListener('focusin', (e) => {
             if (e.target.matches('input, textarea')) {
+                const fieldType = this.getFieldType(e.target);
+                console.log('Field focused:', e.target.id, fieldType);
+
+                // Handle regular focus behavior
                 this.handleFieldFocus(e.target);
+
+                // Trigger hide animation when focusing on sensitive fields
+                if (fieldType === 'diaryId' || fieldType === 'userPassword') {
+                    console.log('Triggering hide animation for sensitive field:', fieldType);
+                    this.handleSensitiveFieldFocus(e.target);
+                }
             }
         });
 
@@ -80,20 +99,6 @@ class TunnelBear {
         document.addEventListener('input', (e) => {
             if (e.target.matches('input, textarea')) {
                 this.handleFieldInput(e.target);
-            }
-        });
-
-        // Listen for focus events on input fields (this is how the original tunnel bear works)
-        document.addEventListener('focusin', (e) => {
-            if (e.target.matches('input')) {
-                const fieldType = this.getFieldType(e.target);
-                console.log('Field focused:', e.target.id, fieldType);
-
-                // Trigger hide animation when focusing on sensitive fields
-                if (fieldType === 'diaryId' || fieldType === 'userPassword') {
-                    console.log('Triggering hide animation for sensitive field:', fieldType);
-                    this.handleSensitiveFieldFocus(e.target);
-                }
             }
         });
 
@@ -149,10 +154,19 @@ class TunnelBear {
         console.log('Sensitive field focused:', field.id, fieldType);
         console.log('Hide bear images available:', this.hideBearImages.length);
         console.log('Peak bear images available:', this.peakBearImages.length);
+        console.log('Current bear element:', this.bearElement);
 
         // Trigger hide bear animation for sensitive fields (following original tunnel bear logic)
         if (fieldType === 'diaryId' || fieldType === 'userPassword') {
             console.log('Starting hide animation...');
+            console.log('Hide bear images:', this.hideBearImages);
+
+            // Check if images are loaded
+            if (this.hideBearImages.length === 0) {
+                console.error('No hide bear images loaded!');
+                return;
+            }
+
             // First time entering sensitive field - animate hide bear images
             this.animateImages(this.hideBearImages, 40, false, () => {
                 console.log('Hide animation complete, starting peak animation...');
