@@ -1,0 +1,32 @@
+{
+    "name": "shared-diary-platform",
+    "version": "1.0.0",
+    "description": "A private diary platform for couples, friends, and groups to write and share daily entries with password-protected unlocking",
+    "main": "index.html",
+    "scripts": {
+        "dev": "netlify dev",
+        "build": "echo 'No build step required'",
+        "deploy": "netlify deploy --prod"
+    },
+    "keywords": [
+        "diary",
+        "couples",
+        "friends",
+        "journal",
+        "shared",
+        "private",
+        "password",
+        "timeline"
+    ],
+    "author": "Shared Diary Platform",
+    "license": "MIT",
+    "dependencies": {
+        "@supabase/supabase-js": "^2.38.0"
+    },
+    "devDependencies": {
+        "netlify-cli": "^17.0.0"
+    },
+    "engines": {
+        "node": ">=18.0.0"
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "name": "Shared Diary for Connections",
+    "short_name": "Shared Diary",
+    "description": "A private diary platform for couples, friends, and groups to write and share daily entries",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#3b82f6",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/assets/icon.svg",
+            "sizes": "64x64",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/assets/icon.svg",
+            "sizes": "192x192",
+            "type": "image/svg+xml",
+            "purpose": "any"
+        },
+        {
+            "src": "/assets/icon.svg",
+            "sizes": "512x512",
+            "type": "image/svg+xml",
+            "purpose": "any"
+        }
+    ],
+    "categories": [
+        "lifestyle",
+        "productivity",
+        "social"
+    ],
+    "lang": "en",
+    "dir": "ltr"
+}

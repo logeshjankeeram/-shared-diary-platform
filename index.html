@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shared Diary for Connections</title>
+    <meta name="description"
+        content="A private diary platform for couples, friends, and groups to write and share daily entries with password-protected unlocking.">
+    <meta name="keywords" content="diary, couples, friends, journal, shared diary, private entries">
+    <meta name="author" content="Shared Diary Platform">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#3b82f6">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap"
+        rel="stylesheet">
+
+    <!-- jsPDF for PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- Supabase JavaScript client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- jsSHA for password hashing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/3.3.0/sha256.min.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'lora': ['Lora', 'serif'],
+                        'opensans': ['Open Sans', 'sans-serif']
+                    },
+                    colors: {
+                        'couple-pink': '#fdf2f8',
+                        'couple-lavender': '#f3e8ff',
+                        'couple-cream': '#fefce8',
+                        'group-blue': '#eff6ff',
+                        'group-yellow': '#fefce8'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-lora font-semibold text-gray-900">Shared Diary</h1>
+                    <span class="ml-2 text-sm text-gray-500">for Connections</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="notificationBtn" class="text-gray-600 hover:text-gray-900">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5z">
+                            </path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z">
+                            </path>
+                        </svg>
+                    </button>
+                    <button id="helpBtn" class="text-gray-600 hover:text-gray-900">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                            </path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Diary Selection -->
+        <div id="diarySelection" class="mb-8">
+            <div class="bg-white rounded-lg shadow-sm border p-6">
+                <h2 class="text-xl font-lora font-semibold text-gray-900 mb-4">Select or Create Diary</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="diaryId" class="block text-sm font-medium text-gray-700 mb-2">Diary ID</label>
+                        <input type="text" id="diaryId" placeholder="e.g., AliceAndBob2025"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label for="userName" class="block text-sm font-medium text-gray-700 mb-2">Your Name</label>
+                        <input type="text" id="userName" placeholder="e.g., Alice"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <label for="diaryType" class="block text-sm font-medium text-gray-700 mb-2">Diary Type</label>
+                    <select id="diaryType"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="couple">Couple (2 people)</option>
+                        <option value="group">Group (3+ people)</option>
+                    </select>
+                </div>
+                <div class="mt-6 flex space-x-4">
+                    <button id="joinDiaryBtn"
+                        class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Join
+                        Diary</button>
+                    <button id="createDiaryBtn"
+                        class="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">Create
+                        New Diary</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Diary Interface -->
+        <div id="diaryInterface" class="hidden">
+            <!-- Current Diary Info -->
+            <div class="bg-white rounded-lg shadow-sm border p-4 mb-6">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="text-lg font-lora font-semibold text-gray-900">Current Diary: <span
+                                id="currentDiaryId"></span></h3>
+                        <p class="text-sm text-gray-600">Type: <span id="currentDiaryType"></span> | Users: <span
+                                id="currentUsers"></span></p>
+                    </div>
+                    <button id="newDiaryBtn" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Start New
+                        Diary</button>
+                </div>
+            </div>
+
+            <!-- Entry Creation -->
+            <div class="bg-white rounded-lg shadow-sm border p-6 mb-6">
+                <h3 class="text-lg font-lora font-semibold text-gray-900 mb-4">Write Today's Entry</h3>
+                <div class="mb-4">
+                    <label for="entryDate" class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                    <input type="date" id="entryDate"
+                        class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="mb-4">
+                    <label for="entryContent" class="block text-sm font-medium text-gray-700 mb-2">Your Entry</label>
+                    <textarea id="entryContent" rows="6" placeholder="Write about your day, thoughts, or feelings..."
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+                </div>
+                <div class="mb-4">
+                    <label for="entryPassword" class="block text-sm font-medium text-gray-700 mb-2">Password (to unlock
+                        later)</label>
+                    <input type="password" id="entryPassword" placeholder="Choose a password for this entry"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <button id="submitEntryBtn"
+                    class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Submit
+                    Entry</button>
+            </div>
+
+            <!-- Entry Unlocking -->
+            <div class="bg-white rounded-lg shadow-sm border p-6 mb-6">
+                <h3 class="text-lg font-lora font-semibold text-gray-900 mb-4">Unlock Shared Entries</h3>
+                <div class="mb-4">
+                    <label for="unlockDate" class="block text-sm font-medium text-gray-700 mb-2">Date to Unlock</label>
+                    <input type="date" id="unlockDate"
+                        class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div id="passwordInputs" class="mb-4">
+                    <!-- Password inputs will be dynamically generated -->
+                </div>
+                <button id="unlockEntriesBtn"
+                    class="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">Unlock
+                    Entries</button>
+            </div>
+
+            <!-- Timeline View -->
+            <div id="timelineView" class="hidden">
+                <div class="bg-white rounded-lg shadow-sm border p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-lora font-semibold text-gray-900">Shared Timeline</h3>
+                        <div class="flex space-x-2">
+                            <button id="prevDayBtn" class="text-gray-600 hover:text-gray-900">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 19l-7-7 7-7"></path>
+                                </svg>
+                            </button>
+                            <span id="currentTimelineDate" class="text-sm text-gray-600"></span>
+                            <button id="nextDayBtn" class="text-gray-600 hover:text-gray-900">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="timelineContainer" class="relative">
+                        <!-- Timeline content will be dynamically generated -->
+                    </div>
+                    <div class="mt-6 flex justify-center">
+                        <button id="exportPdfBtn"
+                            class="bg-purple-600 text-white px-6 py-2 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500">Export
+                            as PDF</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Modal -->
+        <div id="helpModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+            <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
+                <div class="mt-3">
+                    <h3 class="text-lg font-lora font-semibold text-gray-900 mb-4">How to Use Shared Diary</h3>
+                    <div class="space-y-4 text-sm text-gray-700">
+                        <div>
+                            <h4 class="font-semibold text-gray-900">1. Create or Join a Diary</h4>
+                            <p>Enter a unique Diary ID (e.g., "AliceAndBob2025") and your name. Choose whether it's for
+                                a couple or group.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900">2. Write Daily Entries</h4>
+                            <p>Write your thoughts for the day and set a password. Your entry will be locked until all
+                                users share their passwords.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900">3. Share Passwords</h4>
+                            <p>When everyone is ready, share your passwords to unlock and view all entries for that day
+                                side by side.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900">4. View Timeline</h4>
+                            <p>See all shared entries in a synchronized timeline view with highlighted themes and
+                                similarities.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900">5. Export Memories</h4>
+                            <p>Download your shared entries as a PDF to keep as a permanent record of your journey
+                                together.</p>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex justify-end">
+                        <button id="closeHelpBtn"
+                            class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feedback Form -->
+        <div class="mt-12 bg-white rounded-lg shadow-sm border p-6">
+            <h3 class="text-lg font-lora font-semibold text-gray-900 mb-4">Share Your Feedback</h3>
+            <form name="feedback" method="POST" data-netlify="true" class="space-y-4">
+                <div>
+                    <label for="feedbackName" class="block text-sm font-medium text-gray-700 mb-2">Name
+                        (optional)</label>
+                    <input type="text" id="feedbackName" name="name"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="feedbackEmail" class="block text-sm font-medium text-gray-700 mb-2">Email
+                        (optional)</label>
+                    <input type="email" id="feedbackEmail" name="email"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="feedbackMessage" class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                    <textarea id="feedbackMessage" name="message" rows="4"
+                        placeholder="Share your thoughts, suggestions, or report any issues..."
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+                </div>
+                <button type="submit"
+                    class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Send
+                    Feedback</button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <p class="text-sm text-gray-300">Shared Diary Platform - Connect through shared experiences</p>
+                <p class="text-xs text-gray-400 mt-2">Your entries are private and secure. Remember to back up exported
+                    PDFs.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/supabase.js"></script>
+    <script src="js/diary.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
