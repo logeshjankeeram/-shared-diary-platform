@@ -2,8 +2,8 @@
 
 /* Background image */
 body {
-    background: url('./assets/pastel.png') no-repeat center center fixed;
-    background-size: cover;
+    background: url('/assets/pastel.png') no-repeat center center fixed !important;
+    background-size: cover !important;
     min-height: 100vh;
     margin: 0;
     padding: 0;
