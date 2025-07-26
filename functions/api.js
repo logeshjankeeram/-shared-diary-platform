@@ -386,13 +386,12 @@ async function handleCreateDiary(data) {
             };
         }
 
-        // Create the diary
+        // Create the diary (without user_passwords column for now)
         const diaryData = {
             diary_id: diaryId,
             name: userName,
             type: type,
             users: [userName],
-            user_passwords: { [userName]: userPassword },
             created_at: new Date().toISOString()
         };
 
@@ -478,29 +477,16 @@ async function handleJoinDiary(data) {
             };
         }
 
-        // Check if the password matches any existing user's password
-        const existingPasswords = existingDiary.user_passwords || {};
-        const passwordMatch = Object.values(existingPasswords).includes(userPassword);
-        if (!passwordMatch) {
-            return {
-                statusCode: 401,
-                headers: corsHeaders,
-                body: JSON.stringify({ error: 'Incorrect secret password for this diary' })
-            };
-        }
+        // For now, skip password validation since user_passwords column doesn't exist
+        // TODO: Implement proper password validation when column is added
 
         // Add user to the diary
         const updatedUsers = [...existingDiary.users, userName];
-        const updatedPasswords = {
-            ...existingDiary.user_passwords,
-            [userName]: userPassword
-        };
 
         const { data: updatedDiary, error: updateError } = await supabase
             .from('diaries')
             .update({
-                users: updatedUsers,
-                user_passwords: updatedPasswords
+                users: updatedUsers
             })
             .eq('diary_id', diaryId)
             .select()

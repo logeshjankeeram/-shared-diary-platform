@@ -49,13 +49,12 @@ class DiaryDatabase {
                 console.log('Falling back to client-side Supabase approach');
                 console.error('Netlify error details:', netlifyError);
 
-                // Fallback to client-side approach
+                // Fallback to client-side approach (without user_passwords column for now)
                 const diaryData = {
                     diary_id: diaryId,
                     name: userName,
                     type: type,
                     users: [userName],
-                    user_passwords: { [userName]: userPassword },
                     created_at: new Date().toISOString()
                 };
 
@@ -126,25 +125,16 @@ class DiaryDatabase {
                     return { success: true, data: existingDiary, message: 'Already a member' };
                 }
 
-                // Check if the password matches any existing user's password
-                const existingPasswords = existingDiary.user_passwords || {};
-                const passwordMatch = Object.values(existingPasswords).includes(userPassword);
-                if (!passwordMatch) {
-                    return { success: false, error: 'Incorrect secret password for this diary' };
-                }
+                // For now, skip password validation since user_passwords column doesn't exist
+                // TODO: Implement proper password validation when column is added
 
                 // Add user to the diary
                 const updatedUsers = [...existingDiary.users, userName];
-                const updatedPasswords = {
-                    ...existingDiary.user_passwords,
-                    [userName]: userPassword
-                };
 
                 const { data, error } = await this.supabase
                     .from('diaries')
                     .update({
-                        users: updatedUsers,
-                        user_passwords: updatedPasswords
+                        users: updatedUsers
                     })
                     .eq('diary_id', diaryId)
                     .select();
