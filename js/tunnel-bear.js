@@ -30,7 +30,11 @@ class TunnelBear {
         console.log('Bear container created');
         this.setupEventListeners();
         console.log('Event listeners set up');
-        this.setCurrentBearImage(this.watchBearImages[0] || '');
+
+        // Set initial bear image to watching state
+        const initialImage = this.watchBearImages[0] || '';
+        console.log('Setting initial bear image to:', initialImage);
+        this.setCurrentBearImage(initialImage);
         console.log('Initial bear image set');
     }
 
@@ -57,7 +61,14 @@ class TunnelBear {
             hide: this.hideBearImages.length,
             peak: this.peakBearImages.length
         });
-        console.log('Hide bear images:', this.hideBearImages);
+        console.log('First watch bear image:', this.watchBearImages[0]);
+        console.log('First hide bear image:', this.hideBearImages[0]);
+
+        // Test if first image loads
+        const testImg = new Image();
+        testImg.onload = () => console.log('✅ First watch bear image loads successfully');
+        testImg.onerror = () => console.error('❌ First watch bear image failed to load');
+        testImg.src = this.watchBearImages[0];
     }
 
     createBearContainer() {
@@ -68,7 +79,9 @@ class TunnelBear {
 
         if (bearContainer) {
             const bearImg = document.createElement('img');
-            bearImg.src = this.watchBearImages[0];
+            const initialImage = this.watchBearImages[0];
+            console.log('Setting bear initial image to:', initialImage);
+            bearImg.src = initialImage;
             bearImg.className = 'tunnel-bear-avatar';
             bearImg.alt = 'Animated bear avatar';
             bearImg.width = 130;
