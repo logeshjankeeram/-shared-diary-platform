@@ -3,12 +3,12 @@
 const { createClient } = require('@supabase/supabase-js');
 
 // Initialize Supabase client
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SERVICE_KEY; // Use service key for server-side operations
+const supabaseUrl = process.env.SUPABASE_URL || 'https://ksabmcevgtgtwtrobyac.supabase.co';
+const supabaseKey = process.env.SUPABASE_SERVICE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzYWJtY2V2Z3RndHd0cm9ieWFjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MzQ4NTA1OSwiZXhwIjoyMDY5MDYxMDU5fQ.THFgN8I_l1V6hDkMLZUo91gS-Jl99yWoUGuF2Yn7Nro';
 
-if (!supabaseUrl || !supabaseKey) {
-    throw new Error('Missing Supabase environment variables');
-}
+// Log for debugging
+console.log('Supabase URL:', supabaseUrl ? 'Set' : 'Missing');
+console.log('Supabase Key:', supabaseKey ? 'Set' : 'Missing');
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -44,6 +44,16 @@ exports.handler = async (event, context) => {
         const { action, ...data } = JSON.parse(event.body || '{}');
 
         switch (action) {
+            case 'test':
+                return {
+                    statusCode: 200,
+                    headers: corsHeaders,
+                    body: JSON.stringify({
+                        success: true,
+                        message: 'API is working',
+                        timestamp: new Date().toISOString()
+                    })
+                };
             case 'createDiary':
                 return await handleCreateDiary(data);
             case 'joinDiary':
@@ -68,7 +78,11 @@ exports.handler = async (event, context) => {
         return {
             statusCode: 500,
             headers: corsHeaders,
-            body: JSON.stringify({ error: 'Internal server error' })
+            body: JSON.stringify({
+                error: 'Internal server error',
+                details: error.message,
+                stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+            })
         };
     }
 };
