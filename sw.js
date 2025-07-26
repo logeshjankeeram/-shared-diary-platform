@@ -26,8 +26,19 @@ self.addEventListener('install', event => {
 
 // Fetch event
 self.addEventListener('fetch', event => {
+    // Mobile-specific handling
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
     event.respondWith(
-        fetch(event.request)
+        fetch(event.request, {
+            // Mobile-specific fetch options
+            cache: isMobile ? 'no-cache' : 'default',
+            headers: {
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0'
+            }
+        })
             .then(response => {
                 // Always fetch from network first, then cache
                 if (response.status === 200) {

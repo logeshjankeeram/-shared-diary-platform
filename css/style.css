@@ -172,7 +172,7 @@ html {
     }
 }
 
-/* Responsive timeline */
+/* Mobile-specific optimizations */
 @media (max-width: 768px) {
     .timeline-couple {
         grid-template-columns: 1fr;
@@ -184,6 +184,45 @@ html {
 
     .timeline-entry {
         margin-bottom: 1rem;
+    }
+
+    /* Mobile touch optimizations */
+    button,
+    input,
+    textarea,
+    select {
+        min-height: 44px;
+        /* iOS minimum touch target */
+        font-size: 16px;
+        /* Prevent zoom on iOS */
+    }
+
+    /* Mobile scroll optimizations */
+    .timeline-scroll {
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+    }
+
+    /* Mobile modal optimizations */
+    .modal-backdrop {
+        -webkit-backdrop-filter: blur(4px);
+        backdrop-filter: blur(4px);
+    }
+
+    /* Mobile form optimizations */
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    textarea {
+        -webkit-appearance: none;
+        border-radius: 8px;
+        padding: 12px 16px;
+    }
+
+    /* Mobile button optimizations */
+    button {
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
     }
 }
 

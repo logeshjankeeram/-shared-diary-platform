@@ -558,6 +558,10 @@ class DiaryUI {
 
 // Initialize UI when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+    // Mobile-specific cache clearing
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    console.log('Device type:', isMobile ? 'Mobile' : 'Desktop');
+
     // Aggressive cache clearing
     if ('caches' in window) {
         caches.keys().then(cacheNames => {
@@ -575,13 +579,36 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Cleared localStorage for new version');
     }
 
-    // Force reload if this is an old version
-    if (performance.navigation.type === 1) {
-        // This is a reload, check if we need to force a fresh load
+    // Mobile-specific cache busting
+    if (isMobile) {
+        // Force reload on mobile if no fresh parameter
         const urlParams = new URLSearchParams(window.location.search);
         if (!urlParams.has('fresh')) {
-            window.location.href = window.location.href + (window.location.href.includes('?') ? '&' : '?') + 'fresh=' + Date.now();
+            const freshUrl = window.location.href + (window.location.href.includes('?') ? '&' : '?') + 'fresh=' + Date.now();
+            console.log('Mobile: forcing fresh load to:', freshUrl);
+            window.location.href = freshUrl;
             return;
+        }
+
+        // Clear mobile-specific caches
+        if ('caches' in window) {
+            caches.keys().then(cacheNames => {
+                cacheNames.forEach(cacheName => {
+                    if (cacheName.includes('mobile') || cacheName.includes('app')) {
+                        console.log('Deleting mobile cache:', cacheName);
+                        caches.delete(cacheName);
+                    }
+                });
+            });
+        }
+    } else {
+        // Desktop cache busting
+        if (performance.navigation.type === 1) {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (!urlParams.has('fresh')) {
+                window.location.href = window.location.href + (window.location.href.includes('?') ? '&' : '?') + 'fresh=' + Date.now();
+                return;
+            }
         }
     }
 
