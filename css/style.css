@@ -2,7 +2,7 @@
 
 /* Background image */
 body {
-    background: url('/assets/pastel.png') no-repeat center center fixed !important;
+    background: url('/assets/forest.png') no-repeat center center fixed !important;
     background-size: cover !important;
     min-height: 100vh;
     margin: 0;
