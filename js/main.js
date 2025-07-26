@@ -378,14 +378,24 @@ class DiaryUI {
         console.log('diarySelection hidden:', diarySelection.classList.contains('hidden'));
         console.log('diaryInterface hidden:', diaryInterface.classList.contains('hidden'));
 
+        // Hide the selection interface
         diarySelection.classList.add('hidden');
-        diaryInterface.classList.remove('hidden');
+        diarySelection.style.display = 'none';
 
-        // Force the interface to be visible
+        // Show the diary interface with multiple fallbacks
+        diaryInterface.classList.remove('hidden');
         diaryInterface.style.display = 'flex';
         diaryInterface.style.visibility = 'visible';
         diaryInterface.style.opacity = '1';
-        diaryInterface.style.zIndex = '10';
+        diaryInterface.style.zIndex = '9999';
+        diaryInterface.style.position = 'relative';
+        diaryInterface.style.backgroundColor = 'rgba(255, 255, 255, 0.98)';
+        diaryInterface.style.padding = '20px';
+        diaryInterface.style.borderRadius = '10px';
+        diaryInterface.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.15)';
+        diaryInterface.style.margin = '20px auto';
+        diaryInterface.style.maxWidth = '600px';
+        diaryInterface.style.width = '100%';
 
         console.log('After transition:');
         console.log('diarySelection hidden:', diarySelection.classList.contains('hidden'));
@@ -411,6 +421,15 @@ class DiaryUI {
 
         // Add a visual confirmation
         this.showMessage('Welcome to your diary! You can now start writing entries.', 'success');
+
+        // Force scroll to top and focus
+        window.scrollTo(0, 0);
+        setTimeout(() => {
+            const entryDate = document.getElementById('entryDate');
+            if (entryDate) {
+                entryDate.focus();
+            }
+        }, 500);
 
         // Test: Try to manually show the interface
         setTimeout(() => {
