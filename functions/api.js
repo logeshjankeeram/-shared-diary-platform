@@ -9,20 +9,40 @@ const supabaseKey = process.env.SUPABASE_SERVICE_KEY || 'eyJhbGciOiJIUzI1NiIsInR
 // Log for debugging
 console.log('Supabase URL:', supabaseUrl ? 'Set' : 'Missing');
 console.log('Supabase Key:', supabaseKey ? 'Set' : 'Missing');
+console.log('Supabase URL value:', supabaseUrl);
+console.log('Supabase Key length:', supabaseKey ? supabaseKey.length : 0);
 
 let supabase;
 try {
+    console.log('Attempting to create Supabase client...');
     supabase = createClient(supabaseUrl, supabaseKey);
     console.log('Supabase client created successfully');
 } catch (error) {
     console.error('Failed to create Supabase client:', error);
+    console.error('Error details:', JSON.stringify(error, null, 2));
     supabase = null;
 }
 
 // Test Supabase connection
 async function handleTestSupabase() {
     try {
+        console.log('handleTestSupabase called');
+        console.log('supabase client exists:', !!supabase);
+
+        if (!supabase) {
+            return {
+                statusCode: 500,
+                headers: corsHeaders,
+                body: JSON.stringify({
+                    error: 'Supabase client not initialized',
+                    supabaseUrl: supabaseUrl ? 'Set' : 'Missing',
+                    supabaseKey: supabaseKey ? 'Set' : 'Missing'
+                })
+            };
+        }
+
         // Test basic connection and get table structure
+        console.log('Attempting to query diaries table...');
         const { data, error } = await supabase
             .from('diaries')
             .select('*')
