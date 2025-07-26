@@ -15,10 +15,10 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 // Test Supabase connection
 async function handleTestSupabase() {
     try {
-        // Test basic connection
+        // Test basic connection and get table structure
         const { data, error } = await supabase
             .from('diaries')
-            .select('count')
+            .select('*')
             .limit(1);
 
         if (error) {
@@ -33,13 +33,30 @@ async function handleTestSupabase() {
             };
         }
 
+        // Get column information by trying to select specific columns
+        const testColumns = ['diary_id', 'name', 'type', 'users', 'user_passwords', 'created_at'];
+        const columnTest = {};
+
+        for (const col of testColumns) {
+            try {
+                const { data: colData, error: colError } = await supabase
+                    .from('diaries')
+                    .select(col)
+                    .limit(1);
+                columnTest[col] = colError ? 'missing' : 'exists';
+            } catch (e) {
+                columnTest[col] = 'error';
+            }
+        }
+
         return {
             statusCode: 200,
             headers: corsHeaders,
             body: JSON.stringify({
                 success: true,
                 message: 'Supabase connection successful',
-                data: data
+                tableStructure: columnTest,
+                sampleData: data
             })
         };
     } catch (error) {
