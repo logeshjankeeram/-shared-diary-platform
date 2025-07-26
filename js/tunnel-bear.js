@@ -74,26 +74,41 @@ class TunnelBear {
 
     createBearContainer() {
         console.log('Creating bear container...');
-        // Find the bear avatar container in the join form (primary form)
-        const bearContainer = document.querySelector('#joinDiaryForm .w-\\[130px\\] .absolute');
-        console.log('Bear container found:', bearContainer);
 
-        if (bearContainer) {
-            const bearImg = document.createElement('img');
-            bearImg.src = this.watchBearImages[0];
-            bearImg.className = 'tunnel-bear-avatar';
-            bearImg.alt = 'Animated bear avatar';
-            bearImg.width = 130;
-            bearImg.height = 130;
-            bearImg.style.opacity = '1'; // Start visible
+        // Create bear for join form
+        const joinBearContainer = document.querySelector('#joinDiaryForm .w-\\[130px\\] .absolute');
+        if (joinBearContainer) {
+            const joinBearImg = document.createElement('img');
+            joinBearImg.src = this.watchBearImages[0];
+            joinBearImg.className = 'tunnel-bear-avatar';
+            joinBearImg.alt = 'Animated bear avatar';
+            joinBearImg.width = 130;
+            joinBearImg.height = 130;
+            joinBearImg.style.opacity = '1'; // Start visible
 
-            bearContainer.appendChild(bearImg);
-            this.bearElement = bearImg;
-            console.log('Bear element created and added:', this.bearElement);
-        } else {
-            console.error('Bear container not found in join form');
-            console.log('Available elements with #joinDiaryForm:', document.querySelector('#joinDiaryForm'));
-            console.log('Available elements with .w-[130px]:', document.querySelectorAll('.w-\\[130px\\]'));
+            joinBearContainer.appendChild(joinBearImg);
+            this.bearElement = joinBearImg; // Set as primary bear element
+            console.log('Join form bear element created and added:', this.bearElement);
+        }
+
+        // Create bear for create form
+        const createBearContainer = document.querySelector('#createDiaryForm .w-\\[130px\\] .absolute');
+        if (createBearContainer) {
+            const createBearImg = document.createElement('img');
+            createBearImg.src = this.watchBearImages[0];
+            createBearImg.className = 'tunnel-bear-avatar';
+            createBearImg.alt = 'Animated bear avatar';
+            createBearImg.width = 130;
+            createBearImg.height = 130;
+            createBearImg.style.opacity = '0'; // Start hidden
+
+            createBearContainer.appendChild(createBearImg);
+            this.createBearElement = createBearImg; // Store reference to create form bear
+            console.log('Create form bear element created and added:', this.createBearElement);
+        }
+
+        if (!this.bearElement) {
+            console.error('Bear containers not found');
         }
     }
 
@@ -190,6 +205,11 @@ class TunnelBear {
             this.bearElement.style.transition = 'opacity 0.3s ease-in-out';
             this.isVisible = true;
         }
+        // Also show create form bear if it exists
+        if (this.createBearElement) {
+            this.createBearElement.style.opacity = '1';
+            this.createBearElement.style.transition = 'opacity 0.3s ease-in-out';
+        }
     }
 
     // Hide bear with fade out
@@ -198,6 +218,11 @@ class TunnelBear {
             this.bearElement.style.opacity = '0';
             this.bearElement.style.transition = 'opacity 0.3s ease-in-out';
             this.isVisible = false;
+        }
+        // Also hide create form bear if it exists
+        if (this.createBearElement) {
+            this.createBearElement.style.opacity = '0';
+            this.createBearElement.style.transition = 'opacity 0.3s ease-in-out';
         }
     }
 
@@ -273,6 +298,32 @@ class TunnelBear {
         setTimeout(() => {
             this.animateInitialWatchSequence();
         }, 100);
+    }
+
+    // Switch bear to create form
+    switchToCreateForm() {
+        if (this.bearElement && this.createBearElement) {
+            // Hide join form bear
+            this.bearElement.style.opacity = '0';
+            // Show create form bear
+            this.createBearElement.style.opacity = '1';
+            // Update current bear element reference
+            this.bearElement = this.createBearElement;
+            console.log('Switched bear to create form');
+        }
+    }
+
+    // Switch bear to join form
+    switchToJoinForm() {
+        if (this.createBearElement && this.bearElement) {
+            // Hide create form bear
+            this.createBearElement.style.opacity = '0';
+            // Show join form bear
+            this.bearElement.style.opacity = '1';
+            // Update current bear element reference back to join form
+            this.bearElement = document.querySelector('#joinDiaryForm .tunnel-bear-avatar');
+            console.log('Switched bear to join form');
+        }
     }
 
     getFieldType(field) {
@@ -403,6 +454,10 @@ class TunnelBear {
         if (this.bearElement && src) {
             this.bearElement.src = src;
             this.currentBearImage = src;
+        }
+        // Also update the create form bear if it exists
+        if (this.createBearElement && src) {
+            this.createBearElement.src = src;
         }
     }
 

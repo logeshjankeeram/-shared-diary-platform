@@ -241,11 +241,19 @@ class DiaryUI {
     showCreateForm() {
         document.getElementById('joinDiaryForm').classList.add('hidden');
         document.getElementById('createDiaryForm').classList.remove('hidden');
+        // Switch bear to create form
+        if (window.tunnelBear) {
+            window.tunnelBear.switchToCreateForm();
+        }
     }
 
     showJoinForm() {
         document.getElementById('createDiaryForm').classList.add('hidden');
         document.getElementById('joinDiaryForm').classList.remove('hidden');
+        // Switch bear to join form
+        if (window.tunnelBear) {
+            window.tunnelBear.switchToJoinForm();
+        }
     }
 
     // Toggle join password visibility
