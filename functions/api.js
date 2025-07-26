@@ -135,7 +135,10 @@ exports.handler = async (event, context) => {
                     body: JSON.stringify({
                         success: true,
                         message: 'API is working',
-                        timestamp: new Date().toISOString()
+                        timestamp: new Date().toISOString(),
+                        environment: process.env.NODE_ENV || 'development',
+                        supabaseUrl: supabaseUrl ? 'Set' : 'Missing',
+                        supabaseKey: supabaseKey ? 'Set' : 'Missing'
                     })
                 };
             case 'testSupabase':
