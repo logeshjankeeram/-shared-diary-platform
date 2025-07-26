@@ -511,9 +511,20 @@ document.addEventListener('DOMContentLoaded', () => {
 // Handle service worker for PWA functionality
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
+        navigator.serviceWorker.register('/sw.js?v=1.0.1')
             .then(registration => {
                 console.log('SW registered: ', registration);
+
+                // Check for updates
+                registration.addEventListener('updatefound', () => {
+                    const newWorker = registration.installing;
+                    newWorker.addEventListener('statechange', () => {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            // New content is available, reload the page
+                            window.location.reload();
+                        }
+                    });
+                });
             })
             .catch(registrationError => {
                 console.log('SW registration failed: ', registrationError);

@@ -1,13 +1,15 @@
 // Service Worker for Shared Diary Platform
 
-const CACHE_NAME = 'shared-diary-v1.0.0';
+const CACHE_NAME = 'shared-diary-v1.0.1';
 const urlsToCache = [
     '/',
     '/index.html',
-    '/css/style.css',
-    '/js/main.js',
-    '/js/diary.js',
-    '/js/supabase.js',
+    '/css/style.css?v=1.0.1',
+    '/css/critter.css?v=1.0.1',
+    '/js/main.js?v=1.0.1',
+    '/js/diary.js?v=1.0.1',
+    '/js/supabase.js?v=1.0.1',
+    '/js/critter.js?v=1.0.1',
     '/assets/icon.svg'
 ];
 
