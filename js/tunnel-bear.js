@@ -3,6 +3,7 @@
 
 class TunnelBear {
     constructor() {
+        console.log('TunnelBear constructor called');
         this.currentFocus = 'EMAIL';
         this.currentBearImage = null;
         this.isAnimating = false;
@@ -17,14 +18,20 @@ class TunnelBear {
         this.hideBearImages = [];
         this.peakBearImages = [];
 
+        console.log('Calling init()...');
         this.init();
     }
 
     init() {
+        console.log('TunnelBear init() called');
         this.loadBearImages();
+        console.log('Bear images loaded');
         this.createBearContainer();
+        console.log('Bear container created');
         this.setupEventListeners();
+        console.log('Event listeners set up');
         this.setCurrentBearImage(this.watchBearImages[0] || '');
+        console.log('Initial bear image set');
     }
 
     loadBearImages() {
@@ -54,8 +61,10 @@ class TunnelBear {
     }
 
     createBearContainer() {
+        console.log('Creating bear container...');
         // Find the bear avatar container in the form
         const bearContainer = document.querySelector('#diaryForm .w-\\[130px\\] .absolute');
+        console.log('Bear container found:', bearContainer);
 
         if (bearContainer) {
             const bearImg = document.createElement('img');
@@ -67,8 +76,11 @@ class TunnelBear {
 
             bearContainer.appendChild(bearImg);
             this.bearElement = bearImg;
+            console.log('Bear element created and added:', this.bearElement);
         } else {
             console.error('Bear container not found in form');
+            console.log('Available elements with #diaryForm:', document.querySelector('#diaryForm'));
+            console.log('Available elements with .w-[130px]:', document.querySelectorAll('.w-\\[130px\\]'));
         }
     }
 
@@ -374,10 +386,17 @@ document.head.appendChild(style);
 
 // Initialize Tunnel Bear when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    window.tunnelBear = new TunnelBear();
+    console.log('DOM loaded, initializing Tunnel Bear...');
+    try {
+        window.tunnelBear = new TunnelBear();
+        console.log('Tunnel Bear initialized successfully:', window.tunnelBear);
+    } catch (error) {
+        console.error('Error initializing Tunnel Bear:', error);
+    }
 
     // Enable debug mode in development (optional)
     if (window.location.search.includes('debug=true')) {
+        console.log('Enabling debug mode...');
         window.tunnelBear.enableDebugMode();
     }
 }); 
