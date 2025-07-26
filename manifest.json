@@ -4,13 +4,13 @@
     "description": "A private diary platform for couples, friends, and groups to write and share daily entries",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#3b82f6",
-    "orientation": "portrait-primary",
+    "background_color": "#86b049",
+    "theme_color": "#86b049",
+    "orientation": "portrait",
     "icons": [
         {
-            "src": "/assets/icon.svg",
-            "sizes": "any",
+            "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiM4NkIwNDkiLz4KPHN2ZyB4PSI0OCIgeT0iNDgiIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJ3aGl0ZSI+CjxwYXRoIGQ9Ik0xOSAzSDVjLTEuMSAwLTIgLjktMiAydjE0YzAgMS4xLjkgMiAyIDJoMTRjMS4xIDAgMi0uOSAyLTJWNWMwLTEuMS0uOS0yLTItMnpNMTcgMTlINVY1aDEydjE0eiIvPgo8cGF0aCBkPSJNNyA3aDEwdjJoLTEwVjd6TTcgMTFoMTB2MmgtMTB2LTJ6TTcgMTVoMTB2MmgtMTB2LTJ6Ii8+Cjwvc3ZnPgo8L3N2Zz4K",
+            "sizes": "192x192",
             "type": "image/svg+xml",
             "purpose": "any maskable"
         }

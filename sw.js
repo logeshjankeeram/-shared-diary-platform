@@ -1,16 +1,16 @@
 // Service Worker for Shared Diary Platform
 
-const CACHE_NAME = 'burner-diary-v1.1.1';
+const CACHE_NAME = 'burner-diary-v1.1.2';
 const urlsToCache = [
     '/',
-    '/index.html',
-    '/css/style.css?v=1.1.1',
-    '/js/main.js?v=1.1.1',
-    '/js/diary.js?v=1.1.1',
-    '/js/supabase.js?v=1.1.1',
-    '/js/tunnel-bear.js?v=1.1.1',
-    '/assets/icon.svg',
-    '/manifest.json'
+    '/index.html?v=1.1.2',
+    '/css/style.css?v=1.1.2',
+    '/js/main.js?v=1.1.2',
+    '/js/diary.js?v=1.1.2',
+    '/js/supabase.js?v=1.1.2',
+    '/js/tunnel-bear.js?v=1.1.2',
+    '/assets/forest.png?v=1.1.2',
+    '/manifest.json?v=1.1.2'
 ];
 
 // Install event
@@ -36,22 +36,26 @@ self.addEventListener('install', event => {
 
 // Fetch event
 self.addEventListener('fetch', event => {
+    // Skip external resources (fonts, CDNs) to avoid CORS issues
+    if (event.request.url.includes('fonts.googleapis.com') ||
+        event.request.url.includes('fonts.gstatic.com') ||
+        event.request.url.includes('cdn.tailwindcss.com') ||
+        event.request.url.includes('cdnjs.cloudflare.com') ||
+        event.request.url.includes('unpkg.com')) {
+        return;
+    }
+
     // Mobile-specific handling
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
     event.respondWith(
         fetch(event.request, {
             // Mobile-specific fetch options
-            cache: isMobile ? 'no-cache' : 'default',
-            headers: {
-                'Cache-Control': 'no-cache, no-store, must-revalidate',
-                'Pragma': 'no-cache',
-                'Expires': '0'
-            }
+            cache: isMobile ? 'no-cache' : 'default'
         })
             .then(response => {
-                // Always fetch from network first, then cache
-                if (response.status === 200) {
+                // Only cache successful responses for same-origin requests
+                if (response.status === 200 && event.request.url.startsWith(self.location.origin)) {
                     const responseClone = response.clone();
                     caches.open(CACHE_NAME).then(cache => {
                         cache.put(event.request, responseClone);
@@ -60,8 +64,11 @@ self.addEventListener('fetch', event => {
                 return response;
             })
             .catch(() => {
-                // Fallback to cache if network fails
-                return caches.match(event.request);
+                // Fallback to cache if network fails (only for same-origin requests)
+                if (event.request.url.startsWith(self.location.origin)) {
+                    return caches.match(event.request);
+                }
+                return new Response('Network error', { status: 503 });
             })
     );
 });
