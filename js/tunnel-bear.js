@@ -143,6 +143,8 @@ class TunnelBear {
             this.showBear();
             this.clearTimeouts();
             this.setCurrentBearImage(this.watchBearImages[1]);
+            // Reset email length to 0 when focusing on name field
+            this.emailLength = 0;
         } else if (fieldType === 'diaryId' || fieldType === 'userPassword') {
             // Click on diary or password field: start hide bear from hide_bear_1 to hide_bear_5
             this.startHidingSequence();
@@ -294,10 +296,17 @@ class TunnelBear {
         console.log('Updating watching bear image, emailLength:', this.emailLength);
 
         // Direct 1:1 mapping: 1 character = watch_bear_2, 2 characters = watch_bear_3, etc.
-        const frameIndex = Math.min(this.emailLength + 1, this.watchBearImages.length - 1); // +1 because we start from watch_bear_1
-
-        console.log('Setting bear to frame:', frameIndex, 'for', this.emailLength, 'characters');
-        this.setCurrentBearImage(this.watchBearImages[frameIndex]);
+        // But only advance if there are actually characters typed
+        if (this.emailLength === 0) {
+            // No characters typed, stay on watch_bear_1
+            console.log('No characters typed, staying on watch_bear_1');
+            this.setCurrentBearImage(this.watchBearImages[1]);
+        } else {
+            // Characters typed, advance to corresponding frame
+            const frameIndex = Math.min(this.emailLength + 1, this.watchBearImages.length - 1); // +1 because we start from watch_bear_1
+            console.log('Setting bear to frame:', frameIndex, 'for', this.emailLength, 'characters');
+            this.setCurrentBearImage(this.watchBearImages[frameIndex]);
+        }
     }
 
     animateToFrame(startIndex, targetIndex) {
