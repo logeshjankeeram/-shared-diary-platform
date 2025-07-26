@@ -44,6 +44,10 @@ exports.handler = async (event, context) => {
         const { action, ...data } = JSON.parse(event.body || '{}');
 
         switch (action) {
+            case 'createDiary':
+                return await handleCreateDiary(data);
+            case 'joinDiary':
+                return await handleJoinDiary(data);
             case 'verifyPasswords':
                 return await handleVerifyPasswords(data);
             case 'unlockEntries':
@@ -275,6 +279,175 @@ async function handleGetDiaryInfo(data) {
             statusCode: 500,
             headers: corsHeaders,
             body: JSON.stringify({ error: 'Failed to get diary information' })
+        };
+    }
+}
+
+// Create a new diary
+async function handleCreateDiary(data) {
+    const { diaryId, userName, type, userPassword } = data;
+
+    if (!diaryId || !userName || !type || !userPassword) {
+        return {
+            statusCode: 400,
+            headers: corsHeaders,
+            body: JSON.stringify({ error: 'Missing required parameters' })
+        };
+    }
+
+    try {
+        // Check if diary already exists
+        const { data: existingDiary, error: checkError } = await supabase
+            .from('diaries')
+            .select('diary_id')
+            .eq('diary_id', diaryId)
+            .single();
+
+        if (existingDiary) {
+            return {
+                statusCode: 409,
+                headers: corsHeaders,
+                body: JSON.stringify({ error: 'Diary ID already exists' })
+            };
+        }
+
+        // Create the diary
+        const { data: newDiary, error: createError } = await supabase
+            .from('diaries')
+            .insert([
+                {
+                    diary_id: diaryId,
+                    name: userName,
+                    type: type,
+                    users: [userName],
+                    user_passwords: { [userName]: userPassword },
+                    created_at: new Date().toISOString()
+                }
+            ])
+            .select()
+            .single();
+
+        if (createError) {
+            console.error('Create diary error:', createError);
+            return {
+                statusCode: 500,
+                headers: corsHeaders,
+                body: JSON.stringify({ error: 'Failed to create diary' })
+            };
+        }
+
+        return {
+            statusCode: 200,
+            headers: corsHeaders,
+            body: JSON.stringify({
+                success: true,
+                data: newDiary
+            })
+        };
+
+    } catch (error) {
+        console.error('Create diary error:', error);
+        return {
+            statusCode: 500,
+            headers: corsHeaders,
+            body: JSON.stringify({ error: 'Failed to create diary' })
+        };
+    }
+}
+
+// Join an existing diary
+async function handleJoinDiary(data) {
+    const { diaryId, userName, userPassword } = data;
+
+    if (!diaryId || !userName || !userPassword) {
+        return {
+            statusCode: 400,
+            headers: corsHeaders,
+            body: JSON.stringify({ error: 'Missing required parameters' })
+        };
+    }
+
+    try {
+        // Get the existing diary
+        const { data: existingDiary, error: fetchError } = await supabase
+            .from('diaries')
+            .select('*')
+            .eq('diary_id', diaryId)
+            .single();
+
+        if (fetchError) {
+            return {
+                statusCode: 404,
+                headers: corsHeaders,
+                body: JSON.stringify({ error: 'Diary not found' })
+            };
+        }
+
+        // Check if user is already in the diary
+        if (existingDiary.users.includes(userName)) {
+            return {
+                statusCode: 200,
+                headers: corsHeaders,
+                body: JSON.stringify({
+                    success: true,
+                    data: existingDiary,
+                    message: 'Already a member'
+                })
+            };
+        }
+
+        // Check if the password matches any existing user's password
+        const existingPasswords = existingDiary.user_passwords || {};
+        const passwordMatch = Object.values(existingPasswords).includes(userPassword);
+        if (!passwordMatch) {
+            return {
+                statusCode: 401,
+                headers: corsHeaders,
+                body: JSON.stringify({ error: 'Incorrect secret password for this diary' })
+            };
+        }
+
+        // Add user to the diary
+        const updatedUsers = [...existingDiary.users, userName];
+        const updatedPasswords = {
+            ...existingDiary.user_passwords,
+            [userName]: userPassword
+        };
+
+        const { data: updatedDiary, error: updateError } = await supabase
+            .from('diaries')
+            .update({
+                users: updatedUsers,
+                user_passwords: updatedPasswords
+            })
+            .eq('diary_id', diaryId)
+            .select()
+            .single();
+
+        if (updateError) {
+            console.error('Join diary error:', updateError);
+            return {
+                statusCode: 500,
+                headers: corsHeaders,
+                body: JSON.stringify({ error: 'Failed to join diary' })
+            };
+        }
+
+        return {
+            statusCode: 200,
+            headers: corsHeaders,
+            body: JSON.stringify({
+                success: true,
+                data: updatedDiary
+            })
+        };
+
+    } catch (error) {
+        console.error('Join diary error:', error);
+        return {
+            statusCode: 500,
+            headers: corsHeaders,
+            body: JSON.stringify({ error: 'Failed to join diary' })
         };
     }
 }
