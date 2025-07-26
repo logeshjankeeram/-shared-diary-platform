@@ -177,8 +177,9 @@ class LoginCritter {
         if (!this.isActive) return;
 
         // Calculate head rotation based on text position
+        // Start from left (-30°) and rotate to right (+30°) as text fills
         const maxRotation = 30; // degrees
-        const rotation = (fractionComplete - 0.5) * maxRotation * 2;
+        const rotation = (fractionComplete * maxRotation * 2) - maxRotation;
 
         this.critter.style.setProperty('--head-rotation', `${rotation}deg`);
     }
