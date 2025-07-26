@@ -37,7 +37,10 @@ class DiaryUI {
     setupEventListeners() {
         // Diary selection
         document.getElementById('joinDiaryBtn')?.addEventListener('click', () => this.joinDiary());
-        document.getElementById('createDiaryBtn')?.addEventListener('click', () => this.createDiary());
+        document.getElementById('createDiaryBtn')?.addEventListener('click', () => {
+            console.log('Create Diary button clicked!');
+            this.createDiary();
+        });
         document.getElementById('newDiaryBtn')?.addEventListener('click', () => this.startNewDiary());
 
         // Form switching
@@ -181,10 +184,13 @@ class DiaryUI {
 
     // Create a new diary
     async createDiary() {
+        console.log('createDiary method called!');
         const diaryId = document.getElementById('createDiaryId').value.trim();
         const userName = document.getElementById('createUserName').value.trim();
         const userPassword = document.getElementById('createUserPassword').value;
         const diaryType = document.getElementById('createDiaryType').value;
+
+        console.log('Form values:', { diaryId, userName, userPassword: userPassword ? '***' : 'empty', diaryType });
 
         if (!this.validateInputs(diaryId, userName, userPassword)) return;
 
@@ -319,6 +325,8 @@ class DiaryUI {
 
     // Validate input fields
     validateInputs(diaryId, userName, userPassword = '') {
+        console.log('validateInputs called with:', { diaryId, userName, userPassword: userPassword ? '***' : 'empty' });
+
         // For joining, userName can be empty (will be retrieved from diary)
         if (userName && userName.length < 2) {
             this.showMessage('Name must be at least 2 characters', 'error');
