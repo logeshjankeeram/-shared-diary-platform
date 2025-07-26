@@ -10,7 +10,14 @@ const supabaseKey = process.env.SUPABASE_SERVICE_KEY || 'eyJhbGciOiJIUzI1NiIsInR
 console.log('Supabase URL:', supabaseUrl ? 'Set' : 'Missing');
 console.log('Supabase Key:', supabaseKey ? 'Set' : 'Missing');
 
-const supabase = createClient(supabaseUrl, supabaseKey);
+let supabase;
+try {
+    supabase = createClient(supabaseUrl, supabaseKey);
+    console.log('Supabase client created successfully');
+} catch (error) {
+    console.error('Failed to create Supabase client:', error);
+    supabase = null;
+}
 
 // Test Supabase connection
 async function handleTestSupabase() {
@@ -90,6 +97,9 @@ const corsHeaders = {
 
 // Main handler
 exports.handler = async (event, context) => {
+    console.log('Function called with:', event.httpMethod, event.path);
+    console.log('Event body:', event.body);
+
     // Handle CORS preflight requests
     if (event.httpMethod === 'OPTIONS') {
         return {
@@ -99,8 +109,23 @@ exports.handler = async (event, context) => {
         };
     }
 
+    // Basic health check
+    if (event.httpMethod === 'GET') {
+        return {
+            statusCode: 200,
+            headers: corsHeaders,
+            body: JSON.stringify({
+                success: true,
+                message: 'API is running',
+                timestamp: new Date().toISOString()
+            })
+        };
+    }
+
     try {
         const { action, ...data } = JSON.parse(event.body || '{}');
+        console.log('Parsed action:', action);
+        console.log('Parsed data:', data);
 
         switch (action) {
             case 'test':
@@ -114,10 +139,37 @@ exports.handler = async (event, context) => {
                     })
                 };
             case 'testSupabase':
+                if (!supabase) {
+                    return {
+                        statusCode: 500,
+                        headers: corsHeaders,
+                        body: JSON.stringify({
+                            error: 'Supabase client not initialized'
+                        })
+                    };
+                }
                 return await handleTestSupabase();
             case 'createDiary':
+                if (!supabase) {
+                    return {
+                        statusCode: 500,
+                        headers: corsHeaders,
+                        body: JSON.stringify({
+                            error: 'Supabase client not initialized'
+                        })
+                    };
+                }
                 return await handleCreateDiary(data);
             case 'joinDiary':
+                if (!supabase) {
+                    return {
+                        statusCode: 500,
+                        headers: corsHeaders,
+                        body: JSON.stringify({
+                            error: 'Supabase client not initialized'
+                        })
+                    };
+                }
                 return await handleJoinDiary(data);
             case 'verifyPasswords':
                 return await handleVerifyPasswords(data);
