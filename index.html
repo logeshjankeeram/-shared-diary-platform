@@ -12,7 +12,7 @@
 
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#3b82f6">
+    <meta name="theme-color" content="#86b049">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -48,11 +48,11 @@
                         'opensans': ['Open Sans', 'sans-serif']
                     },
                     colors: {
-                        'couple-pink': '#fdf2f8',
-                        'couple-lavender': '#f3e8ff',
-                        'couple-cream': '#fefce8',
-                        'group-blue': '#eff6ff',
-                        'group-yellow': '#fefce8'
+                        'matcha-light': '#f0f9f0',
+                        'matcha-medium': '#86b049',
+                        'matcha-dark': '#6b8e23',
+                        'matcha-pale': '#e8f5e8',
+                        'matcha-accent': '#c6f6d5'
                     }
                 }
             }
@@ -60,7 +60,7 @@
     </script>
 </head>
 
-<body class="bg-gray-50 min-h-screen">
+<body class="bg-matcha-light min-h-screen">
     <!-- Header -->
     <header class="bg-white shadow-sm border-b">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -150,11 +150,11 @@
                     <!-- Action Buttons -->
                     <div class="w-full flex flex-col space-y-3 mt-4">
                         <button type="button" id="joinDiaryBtn"
-                            class="py-4 w-full rounded-lg bg-blue-600 text-white font-semibold text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-blue-700 transition-colors">
+                            class="py-4 w-full rounded-lg bg-matcha-medium text-white font-semibold text-lg focus:outline-none focus:ring-2 focus:ring-matcha-dark hover:bg-matcha-dark transition-colors">
                             Join Diary
                         </button>
                         <button type="button" id="createDiaryBtn"
-                            class="py-4 w-full rounded-lg bg-green-600 text-white font-semibold text-lg focus:outline-none focus:ring-2 focus:ring-green-500 hover:bg-green-700 transition-colors">
+                            class="py-4 w-full rounded-lg bg-matcha-dark text-white font-semibold text-lg focus:outline-none focus:ring-2 focus:ring-matcha-dark hover:bg-matcha-medium transition-colors">
                             Create New Diary
                         </button>
                     </div>
@@ -204,7 +204,7 @@
                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     <button id="submitEntryBtn"
-                        class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Submit
+                        class="bg-matcha-medium text-white px-6 py-2 rounded-md hover:bg-matcha-dark focus:outline-none focus:ring-2 focus:ring-matcha-dark">Submit
                         Entry</button>
                 </div>
 
@@ -221,7 +221,7 @@
                         <!-- Password inputs will be dynamically generated -->
                     </div>
                     <button id="unlockEntriesBtn"
-                        class="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">Unlock
+                        class="bg-matcha-dark text-white px-6 py-2 rounded-md hover:bg-matcha-medium focus:outline-none focus:ring-2 focus:ring-matcha-dark">Unlock
                         Entries</button>
                 </div>
 
@@ -339,7 +339,7 @@
                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
                     </div>
                     <button type="submit"
-                        class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Send
+                        class="bg-matcha-medium text-white px-6 py-2 rounded-md hover:bg-matcha-dark focus:outline-none focus:ring-2 focus:ring-matcha-dark">Send
                         Feedback</button>
                 </form>
             </div>
@@ -347,7 +347,7 @@
 
         <!-- Floating Feedback Button -->
         <button id="openFeedbackBtn"
-            class="fixed bottom-6 right-6 z-40 bg-blue-600 text-white rounded-full shadow-lg p-3 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center">
+            class="fixed bottom-6 right-6 z-40 bg-matcha-medium text-white rounded-full shadow-lg p-3 hover:bg-matcha-dark focus:outline-none focus:ring-2 focus:ring-matcha-dark flex items-center">
             <svg class="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8s-9-3.582-9-8 4.03-8 9-8 9 3.582 9 8z" />
