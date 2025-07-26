@@ -86,9 +86,13 @@ class TunnelBear {
 
         // Listen for clicks on sensitive fields (Diary ID and Secret Password)
         document.addEventListener('click', (e) => {
+            console.log('Click event detected on:', e.target);
             if (e.target.matches('input')) {
+                console.log('Input field clicked:', e.target.id);
                 const fieldType = this.getFieldType(e.target);
+                console.log('Field type detected:', fieldType);
                 if (fieldType === 'diaryId' || fieldType === 'userPassword') {
+                    console.log('Triggering sensitive field click for:', fieldType);
                     this.handleSensitiveFieldClick(e.target);
                 }
             }
@@ -144,12 +148,17 @@ class TunnelBear {
     handleSensitiveFieldClick(field) {
         const fieldType = this.getFieldType(field);
         console.log('Sensitive field clicked:', field.id, fieldType);
+        console.log('Hide bear images available:', this.hideBearImages.length);
+        console.log('Peak bear images available:', this.peakBearImages.length);
 
         // Trigger hide bear animation for sensitive fields
         if (fieldType === 'diaryId' || fieldType === 'userPassword') {
+            console.log('Starting hide animation...');
             this.animateImages(this.hideBearImages, 40, false, () => {
+                console.log('Hide animation complete, starting peak animation...');
                 // After hiding, show peak animation briefly then return to watching
                 this.animateImages(this.peakBearImages, 50, false, () => {
+                    console.log('Peak animation complete, returning to watching...');
                     setTimeout(() => {
                         this.animateWatchingBearImages();
                     }, 200);
@@ -224,18 +233,23 @@ class TunnelBear {
     }
 
     animateImages(images, interval, reverse = false, onComplete) {
+        console.log('animateImages called with:', images.length, 'images, interval:', interval);
         if (images.length === 0) {
+            console.log('No images to animate, calling onComplete');
             onComplete?.();
             return;
         }
 
         this.isAnimating = true;
         const imageSequence = reverse ? [...images].reverse() : images;
+        console.log('Image sequence:', imageSequence);
 
         imageSequence.forEach((img, index) => {
             const timeoutId = setTimeout(() => {
+                console.log('Setting bear image to:', img);
                 this.setCurrentBearImage(img);
                 if (index === imageSequence.length - 1) {
+                    console.log('Animation sequence complete');
                     this.isAnimating = false;
                     onComplete?.();
                 }
