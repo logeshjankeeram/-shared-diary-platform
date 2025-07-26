@@ -180,14 +180,14 @@ class TunnelBear {
             }
 
             // First time entering sensitive field - animate hide bear images
-            this.animateImages(this.hideBearImages, 40, false, () => {
+            this.animateImages(this.hideBearImages, 150, false, () => {
                 console.log('Hide animation complete, starting peak animation...');
                 // After hiding, show peak animation briefly then return to watching
-                this.animateImages(this.peakBearImages, 50, false, () => {
+                this.animateImages(this.peakBearImages, 200, false, () => {
                     console.log('Peak animation complete, returning to watching...');
                     setTimeout(() => {
                         this.animateWatchingBearImages();
-                    }, 200);
+                    }, 500);
                 });
             });
         }
