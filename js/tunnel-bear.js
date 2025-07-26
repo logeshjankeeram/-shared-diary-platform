@@ -32,9 +32,10 @@ class TunnelBear {
         this.setupEventListeners();
         console.log('Event listeners set up');
 
-        // Start with no bear visible
-        console.log('Starting with no bear visible');
-        this.hideBear();
+        // Start with watch_bear_0 visible
+        console.log('Starting with watch_bear_0 visible');
+        this.showBear();
+        this.setCurrentBearImage(this.watchBearImages[0]);
         console.log('Initial state set');
     }
 
@@ -84,7 +85,7 @@ class TunnelBear {
             bearImg.alt = 'Animated bear avatar';
             bearImg.width = 130;
             bearImg.height = 130;
-            bearImg.style.opacity = '0'; // Start hidden
+            bearImg.style.opacity = '1'; // Start visible
 
             bearContainer.appendChild(bearImg);
             this.bearElement = bearImg;
