@@ -46,11 +46,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/3.3.0/sha256.min.js"></script>
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/style.css?v=1.0.3">
+    <link rel="stylesheet" href="css/style.css?v=1.0.4">
 
     <script>
-        // Add timestamp for aggressive cache busting
+        // Nuclear timestamp for mobile cache busting
         const timestamp = Date.now();
+        const mobileTimestamp = navigator.userAgent.includes('Mobile') ? Date.now() : timestamp;
 
         tailwind.config = {
             theme: {
@@ -383,10 +384,10 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="js/supabase.js?v=1.0.3&t=${timestamp}"></script>
-    <script src="js/diary.js?v=1.0.3&t=${timestamp}"></script>
-    <script src="js/main.js?v=1.0.3&t=${timestamp}"></script>
-    <script src="js/tunnel-bear.js?v=1.0.3&t=${timestamp}"></script>
+    <script src="js/supabase.js?v=1.0.4&t=${mobileTimestamp}&mobile=1"></script>
+    <script src="js/diary.js?v=1.0.4&t=${mobileTimestamp}&mobile=1"></script>
+    <script src="js/main.js?v=1.0.4&t=${mobileTimestamp}&mobile=1"></script>
+    <script src="js/tunnel-bear.js?v=1.0.4&t=${mobileTimestamp}&mobile=1"></script>
 </body>
 
 </html>

@@ -558,49 +558,75 @@ class DiaryUI {
 
 // Initialize UI when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    // Mobile-specific cache clearing
+    // Nuclear mobile cache busting
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     console.log('Device type:', isMobile ? 'Mobile' : 'Desktop');
 
-    // Aggressive cache clearing
+    // Nuclear cache clearing - delete ALL caches
     if ('caches' in window) {
         caches.keys().then(cacheNames => {
+            console.log('Found caches:', cacheNames);
             cacheNames.forEach(cacheName => {
-                console.log('Deleting cache:', cacheName);
+                console.log('NUCLEAR: Deleting cache:', cacheName);
                 caches.delete(cacheName);
             });
         });
     }
 
-    // Clear localStorage if needed
-    if (localStorage.getItem('lastVersion') !== '1.0.3') {
-        localStorage.clear();
-        localStorage.setItem('lastVersion', '1.0.3');
-        console.log('Cleared localStorage for new version');
+    // Clear ALL storage
+    localStorage.clear();
+    sessionStorage.clear();
+    if ('indexedDB' in window) {
+        indexedDB.databases().then(databases => {
+            databases.forEach(db => {
+                console.log('Deleting IndexedDB:', db.name);
+                indexedDB.deleteDatabase(db.name);
+            });
+        });
     }
 
-    // Mobile-specific cache busting
+    // Set new version
+    localStorage.setItem('lastVersion', '1.0.4');
+    localStorage.setItem('lastLoad', Date.now().toString());
+
+    // Mobile nuclear option
     if (isMobile) {
-        // Force reload on mobile if no fresh parameter
+        console.log('MOBILE NUCLEAR OPTION ACTIVATED');
+
+        // Force reload with multiple cache-busting parameters
         const urlParams = new URLSearchParams(window.location.search);
-        if (!urlParams.has('fresh')) {
-            const freshUrl = window.location.href + (window.location.href.includes('?') ? '&' : '?') + 'fresh=' + Date.now();
-            console.log('Mobile: forcing fresh load to:', freshUrl);
-            window.location.href = freshUrl;
+        const hasFresh = urlParams.has('fresh');
+        const hasMobile = urlParams.has('mobile');
+        const hasNuclear = urlParams.has('nuclear');
+
+        if (!hasFresh || !hasMobile || !hasNuclear) {
+            const timestamp = Date.now();
+            const random = Math.random().toString(36).substring(7);
+            const freshUrl = `${window.location.origin}${window.location.pathname}?fresh=${timestamp}&mobile=1&nuclear=1&r=${random}`;
+            console.log('MOBILE NUCLEAR: forcing fresh load to:', freshUrl);
+            window.location.replace(freshUrl);
             return;
         }
 
-        // Clear mobile-specific caches
+        // Additional mobile cache clearing
         if ('caches' in window) {
             caches.keys().then(cacheNames => {
                 cacheNames.forEach(cacheName => {
-                    if (cacheName.includes('mobile') || cacheName.includes('app')) {
-                        console.log('Deleting mobile cache:', cacheName);
-                        caches.delete(cacheName);
-                    }
+                    console.log('MOBILE NUCLEAR: Deleting cache:', cacheName);
+                    caches.delete(cacheName);
                 });
             });
         }
+
+        // Force reload all scripts
+        const scripts = document.querySelectorAll('script[src]');
+        scripts.forEach(script => {
+            const originalSrc = script.src;
+            const newSrc = originalSrc + (originalSrc.includes('?') ? '&' : '?') + 'mobile=' + Date.now();
+            script.src = newSrc;
+            console.log('MOBILE NUCLEAR: Updated script src:', newSrc);
+        });
+
     } else {
         // Desktop cache busting
         if (performance.navigation.type === 1) {
@@ -618,7 +644,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Handle service worker for PWA functionality
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js?v=1.0.3')
+        navigator.serviceWorker.register('/sw.js?v=1.0.4')
             .then(registration => {
                 console.log('SW registered: ', registration);
 

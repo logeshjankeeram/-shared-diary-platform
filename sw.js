@@ -1,14 +1,14 @@
 // Service Worker for Shared Diary Platform
 
-const CACHE_NAME = 'burner-diary-v1.0.3';
+const CACHE_NAME = 'burner-diary-v1.0.4';
 const urlsToCache = [
     '/',
     '/index.html',
-    '/css/style.css?v=1.0.3',
-    '/js/main.js?v=1.0.3',
-    '/js/diary.js?v=1.0.3',
-    '/js/supabase.js?v=1.0.3',
-    '/js/tunnel-bear.js?v=1.0.3',
+    '/css/style.css?v=1.0.4',
+    '/js/main.js?v=1.0.4',
+    '/js/diary.js?v=1.0.4',
+    '/js/supabase.js?v=1.0.4',
+    '/js/tunnel-bear.js?v=1.0.4',
     '/assets/icon.svg',
     '/manifest.json'
 ];
