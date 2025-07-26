@@ -244,24 +244,41 @@ class DiaryUI {
     validateInputs(diaryId, userName, userPassword = '') {
         if (!diaryId) {
             this.showMessage('Please enter a Diary ID', 'error');
+            this.addErrorClass('diaryId');
             return false;
         }
+        this.removeErrorClass('diaryId');
+
         if (!userName) {
             this.showMessage('Please enter your name', 'error');
+            this.addErrorClass('userName');
             return false;
         }
+        this.removeErrorClass('userName');
+
+        if (!userPassword) {
+            this.showMessage('Please enter your secret password', 'error');
+            this.addErrorClass('userPassword');
+            return false;
+        }
+        this.removeErrorClass('userPassword');
+
         if (diaryId.length < 3) {
             this.showMessage('Diary ID must be at least 3 characters', 'error');
-            return false;
-        }
-        if (userName.length < 2) {
-            this.showMessage('Name must be at least 2 characters', 'error');
+            this.addErrorClass('diaryId');
             return false;
         }
 
-        // Validate user password if provided
-        if (userPassword && userPassword.length < 4) {
-            this.showMessage('User password must be at least 4 characters', 'error');
+        if (userName.length < 2) {
+            this.showMessage('Name must be at least 2 characters', 'error');
+            this.addErrorClass('userName');
+            return false;
+        }
+
+        // Validate user password length
+        if (userPassword.length < 4) {
+            this.showMessage('Secret password must be at least 4 characters', 'error');
+            this.addErrorClass('userPassword');
             return false;
         }
 
