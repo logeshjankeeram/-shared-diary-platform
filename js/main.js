@@ -558,13 +558,24 @@ class DiaryUI {
 
 // Initialize UI when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+    // Clear any existing cache
+    if ('caches' in window) {
+        caches.keys().then(cacheNames => {
+            cacheNames.forEach(cacheName => {
+                if (cacheName.includes('shared-diary') || cacheName.includes('burner-diary')) {
+                    caches.delete(cacheName);
+                }
+            });
+        });
+    }
+
     window.diaryUI = new DiaryUI();
 });
 
 // Handle service worker for PWA functionality
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js?v=1.0.1')
+        navigator.serviceWorker.register('/sw.js?v=1.0.2')
             .then(registration => {
                 console.log('SW registered: ', registration);
 
@@ -573,10 +584,21 @@ if ('serviceWorker' in navigator) {
                     const newWorker = registration.installing;
                     newWorker.addEventListener('statechange', () => {
                         if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                            // New content is available, reload the page
-                            window.location.reload();
+                            // New content is available, show update notification
+                            if (confirm('A new version is available! Click OK to reload and get the latest features.')) {
+                                window.location.reload();
+                            }
                         }
                     });
+                });
+
+                // Handle service worker updates
+                let refreshing = false;
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    if (!refreshing) {
+                        refreshing = true;
+                        window.location.reload();
+                    }
                 });
             })
             .catch(registrationError => {

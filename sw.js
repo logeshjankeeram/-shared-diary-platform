@@ -1,16 +1,16 @@
 // Service Worker for Shared Diary Platform
 
-const CACHE_NAME = 'shared-diary-v1.0.1';
+const CACHE_NAME = 'burner-diary-v1.0.2';
 const urlsToCache = [
     '/',
     '/index.html',
-    '/css/style.css?v=1.0.1',
-    '/css/critter.css?v=1.0.1',
-    '/js/main.js?v=1.0.1',
-    '/js/diary.js?v=1.0.1',
-    '/js/supabase.js?v=1.0.1',
-    '/js/critter.js?v=1.0.1',
-    '/assets/icon.svg'
+    '/css/style.css?v=1.0.2',
+    '/js/main.js?v=1.0.2',
+    '/js/diary.js?v=1.0.2',
+    '/js/supabase.js?v=1.0.2',
+    '/js/tunnel-bear.js?v=1.0.2',
+    '/assets/icon.svg',
+    '/manifest.json'
 ];
 
 // Install event
