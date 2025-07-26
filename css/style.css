@@ -1,5 +1,16 @@
 /* Custom styles for Shared Diary Platform */
 
+/* Background image */
+body {
+    background: url('/pastel.png') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    color: #2d5016;
+    transition: all 0.3s ease;
+}
+
 /* Smooth scrolling for timeline */
 html {
     scroll-behavior: smooth;
