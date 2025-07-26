@@ -363,8 +363,19 @@ class DiaryUI {
         console.log('diarySelection element:', document.getElementById('diarySelection'));
         console.log('diaryInterface element:', document.getElementById('diaryInterface'));
 
-        document.getElementById('diarySelection').classList.add('hidden');
-        document.getElementById('diaryInterface').classList.remove('hidden');
+        const diarySelection = document.getElementById('diarySelection');
+        const diaryInterface = document.getElementById('diaryInterface');
+
+        console.log('Before transition:');
+        console.log('diarySelection hidden:', diarySelection.classList.contains('hidden'));
+        console.log('diaryInterface hidden:', diaryInterface.classList.contains('hidden'));
+
+        diarySelection.classList.add('hidden');
+        diaryInterface.classList.remove('hidden');
+
+        console.log('After transition:');
+        console.log('diarySelection hidden:', diarySelection.classList.contains('hidden'));
+        console.log('diaryInterface hidden:', diaryInterface.classList.contains('hidden'));
 
         // Update current diary info
         document.getElementById('currentDiaryId').textContent = this.currentDiary.diary_id;
@@ -377,6 +388,9 @@ class DiaryUI {
             type: this.currentDiary.type,
             users: this.currentDiary.users
         });
+
+        // Add a visual confirmation
+        this.showMessage('Welcome to your diary! You can now start writing entries.', 'success');
 
         // Show timeline if there are unlocked entries
         if (window.diaryManager.timelineDates.length > 0) {
