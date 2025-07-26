@@ -45,23 +45,22 @@ class TunnelBear {
     }
 
     createBearContainer() {
-        const container = document.createElement('div');
-        container.className = 'tunnel-bear-container';
-        container.innerHTML = `
-            <img 
-                src="${this.watchBearImages[0]}" 
-                class="tunnel-bear-avatar"
-                alt="Animated bear avatar"
-                width="130"
-                height="130"
-            />
-        `;
+        // Find the bear avatar container in the form
+        const bearContainer = document.querySelector('#diaryForm .w-\\[130px\\] .absolute');
 
-        // Insert at the beginning of the main content
-        const main = document.querySelector('main');
-        main.insertBefore(container, main.firstChild);
+        if (bearContainer) {
+            const bearImg = document.createElement('img');
+            bearImg.src = this.watchBearImages[0];
+            bearImg.className = 'tunnel-bear-avatar';
+            bearImg.alt = 'Animated bear avatar';
+            bearImg.width = 130;
+            bearImg.height = 130;
 
-        this.bearElement = container.querySelector('.tunnel-bear-avatar');
+            bearContainer.appendChild(bearImg);
+            this.bearElement = bearImg;
+        } else {
+            console.error('Bear container not found in form');
+        }
     }
 
     setupEventListeners() {
