@@ -4,11 +4,28 @@
 body {
     background: url('/assets/forest.png') no-repeat center center fixed !important;
     background-size: cover !important;
+    background-position: center center !important;
     min-height: 100vh;
     margin: 0;
     padding: 0;
     color: #2d5016;
     transition: all 0.3s ease;
+}
+
+/* Mobile-specific background adjustments */
+@media (max-width: 768px) {
+    body {
+        background-size: 120% auto !important;
+        background-position: center 20% !important;
+    }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 480px) {
+    body {
+        background-size: 150% auto !important;
+        background-position: center 25% !important;
+    }
 }
 
 /* Smooth scrolling for timeline */
