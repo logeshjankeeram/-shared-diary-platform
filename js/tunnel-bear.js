@@ -292,14 +292,56 @@ class TunnelBear {
 
     updateWatchingBearImage() {
         console.log('Updating watching bear image, emailLength:', this.emailLength);
+
+        // Clear any existing animation timeouts
+        this.clearTimeouts();
+
+        // Calculate target frame based on input length
         const progress = Math.min(this.emailLength / 30, 1);
-        const index = Math.min(
+        const targetIndex = Math.min(
             Math.floor(progress * (this.watchBearImages.length - 1)),
             this.watchBearImages.length - 1,
         );
-        const imageIndex = Math.max(1, index); // Start from watch_bear_1, not watch_bear_0
-        console.log('Setting bear image to index:', imageIndex, 'image:', this.watchBearImages[imageIndex]);
-        this.setCurrentBearImage(this.watchBearImages[imageIndex]);
+        const targetImageIndex = Math.max(1, targetIndex); // Start from watch_bear_1, not watch_bear_0
+
+        // Get current frame index
+        const currentSrc = this.bearElement?.src || '';
+        const currentIndex = this.watchBearImages.findIndex(img => img === currentSrc);
+        const startIndex = currentIndex > 0 ? currentIndex : 1; // Default to watch_bear_1 if not found
+
+        console.log('Smooth animation from frame', startIndex, 'to frame', targetImageIndex);
+
+        // Animate smoothly from current frame to target frame
+        this.animateToFrame(startIndex, targetImageIndex);
+    }
+
+    animateToFrame(startIndex, targetIndex) {
+        if (startIndex === targetIndex) {
+            // No animation needed
+            return;
+        }
+
+        const frames = [];
+        const step = startIndex < targetIndex ? 1 : -1;
+
+        // Create array of frames to animate through
+        for (let i = startIndex; step > 0 ? i <= targetIndex : i >= targetIndex; i += step) {
+            frames.push(i);
+        }
+
+        console.log('Animating through frames:', frames);
+
+        // Animate through frames with smooth timing
+        frames.forEach((frameIndex, index) => {
+            const timeoutId = setTimeout(() => {
+                if (frameIndex >= 0 && frameIndex < this.watchBearImages.length) {
+                    console.log('Setting frame:', frameIndex, this.watchBearImages[frameIndex]);
+                    this.setCurrentBearImage(this.watchBearImages[frameIndex]);
+                }
+            }, index * 50); // 50ms between frames for smooth animation
+
+            this.timeouts.push(timeoutId);
+        });
     }
 
     animateWatchingBearImages() {
