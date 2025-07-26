@@ -122,25 +122,17 @@
                     <h3 class="text-lg font-handwritten font-semibold text-matcha-dark mb-4 text-center">Join Your Diary
                     </h3>
 
-                    <!-- Tunnel Bear Form Structure -->
-                    <form class="w-full flex flex-col items-center gap-4" id="diaryForm">
+                    <form class="w-full flex flex-col items-center gap-4">
                         <!-- Bear Avatar Container -->
-                        <div class="w-[130px] h-[130px] relative mb-4">
+                        <div class="w-[130px] h-[130px] relative mb-4 mx-auto">
                             <div class="absolute inset-0 flex items-center justify-center">
                                 <!-- Bear will be inserted here by tunnel-bear.js -->
                             </div>
                         </div>
 
-                        <!-- Name Field -->
-                        <div class="w-full">
-                            <input type="text" id="userName" name="userName" placeholder="Your Name"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                autocomplete="name" required />
-                        </div>
-
                         <!-- Diary ID Field -->
                         <div class="w-full">
-                            <input type="text" id="diaryId" name="diaryId"
+                            <input type="text" id="joinDiaryId" name="joinDiaryId"
                                 placeholder="Diary ID (e.g., AliceAndBob2025)"
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 autocomplete="username" required />
@@ -148,11 +140,11 @@
 
                         <!-- Secret Password Field -->
                         <div class="w-full relative">
-                            <input type="password" id="userPassword" name="userPassword"
+                            <input type="password" id="joinUserPassword" name="joinUserPassword"
                                 placeholder="Your Secret Password"
                                 class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                autocomplete="new-password" required />
-                            <button type="button" id="toggleUserPassword"
+                                autocomplete="current-password" required />
+                            <button type="button" id="toggleJoinPassword"
                                 class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 focus:outline-none transition-all duration-300 hover:text-gray-700">
                                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -163,9 +155,73 @@
                             </button>
                         </div>
 
+                        <!-- Join Button -->
+                        <div class="w-full mt-4">
+                            <button type="button" id="joinDiaryBtn"
+                                class="py-4 w-full rounded-lg bg-matcha-medium text-white font-semibold text-lg focus:outline-none focus:ring-2 focus:ring-matcha-dark hover:bg-matcha-dark transition-colors">
+                                Join Diary
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Create Diary Link - Bottom Right -->
+                <div class="fixed bottom-4 right-4 z-10">
+                    <button type="button" id="showCreateFormBtn"
+                        class="bg-matcha-dark text-white px-4 py-2 rounded-lg shadow-lg hover:bg-matcha-medium transition-colors text-sm font-medium">
+                        Create New Diary
+                    </button>
+                </div>
+
+                <!-- Create Diary Form (Hidden by default) -->
+                <div id="createDiaryForm" class="w-full hidden">
+                    <h3 class="text-lg font-handwritten font-semibold text-matcha-dark mb-4 text-center">Create New
+                        Diary</h3>
+
+                    <!-- Bear Avatar Container -->
+                    <div class="w-[130px] h-[130px] relative mb-4 mx-auto">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <!-- Bear will be inserted here by tunnel-bear.js -->
+                        </div>
+                    </div>
+
+                    <form class="w-full flex flex-col items-center gap-4">
+                        <!-- Name Field -->
+                        <div class="w-full">
+                            <input type="text" id="createUserName" name="createUserName" placeholder="Your Name"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                autocomplete="name" required />
+                        </div>
+
+                        <!-- Diary ID Field -->
+                        <div class="w-full">
+                            <input type="text" id="createDiaryId" name="createDiaryId"
+                                placeholder="Choose Diary ID (e.g., AliceAndBob2025)"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                autocomplete="username" required />
+                        </div>
+
+                        <!-- Secret Password Field -->
+                        <div class="w-full relative">
+                            <input type="password" id="createUserPassword" name="createUserPassword"
+                                placeholder="Create Secret Password"
+                                class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                autocomplete="new-password" required />
+                            <button type="button" id="toggleCreatePassword"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 focus:outline-none transition-all duration-300 hover:text-gray-700">
+                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                            </button>
+                        </div>
+
                         <!-- Diary Type Field -->
                         <div class="w-full">
-                            <select id="diaryType" name="diaryType"
+                            <select id="createDiaryType" name="createDiaryType"
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 required>
                                 <option value="couple">Couple (2 people)</option>
@@ -173,18 +229,23 @@
                             </select>
                         </div>
 
-                        <!-- Action Buttons -->
-                        <div class="w-full flex flex-col space-y-3 mt-4">
-                            <button type="button" id="joinDiaryBtn"
-                                class="py-4 w-full rounded-lg bg-matcha-medium text-white font-semibold text-lg focus:outline-none focus:ring-2 focus:ring-matcha-dark hover:bg-matcha-dark transition-colors">
-                                Join Diary
-                            </button>
+                        <!-- Create Button -->
+                        <div class="w-full mt-4">
                             <button type="button" id="createDiaryBtn"
                                 class="py-4 w-full rounded-lg bg-matcha-dark text-white font-semibold text-lg focus:outline-none focus:ring-2 focus:ring-matcha-dark hover:bg-matcha-medium transition-colors">
-                                Create New Diary
+                                Create Diary
                             </button>
                         </div>
                     </form>
+
+                    <!-- Join Diary Link -->
+                    <div class="mt-6 text-center">
+                        <p class="text-gray-600 mb-2">Already have a diary?</p>
+                        <button type="button" id="showJoinFormBtn"
+                            class="text-matcha-medium hover:text-matcha-dark font-medium underline focus:outline-none transition-colors">
+                            Join existing diary
+                        </button>
+                    </div>
                 </div>
             </div>
 
