@@ -86,7 +86,7 @@ class TunnelBear {
 
         // Listen for password visibility toggle
         document.addEventListener('click', (e) => {
-            if (e.target.matches('.password-toggle')) {
+            if (e.target.matches('.password-toggle') || e.target.closest('#toggleUserPassword')) {
                 this.handlePasswordToggle(e.target);
             }
         });
@@ -103,9 +103,12 @@ class TunnelBear {
         const fieldType = this.getFieldType(field);
         console.log('Field focus:', field.id, fieldType);
 
-        if (fieldType === 'diaryId') {
+        if (fieldType === 'userName') {
             this.setCurrentFocus('EMAIL');
-        } else if (fieldType === 'password') {
+        } else if (fieldType === 'diaryId' || fieldType === 'userPassword') {
+            // Hide face when clicking on Diary ID or Secret Password
+            this.setCurrentFocus('PASSWORD');
+        } else if (fieldType === 'entryPassword') {
             this.setCurrentFocus('PASSWORD');
         }
     }
@@ -113,10 +116,10 @@ class TunnelBear {
     handleFieldBlur(field) {
         const fieldType = this.getFieldType(field);
 
-        if (fieldType === 'diaryId') {
-            // Keep email focus for diary ID field
-        } else if (fieldType === 'password') {
-            // Reset to email focus when leaving password
+        if (fieldType === 'userName') {
+            // Keep email focus for user name field
+        } else if (fieldType === 'diaryId' || fieldType === 'userPassword' || fieldType === 'entryPassword') {
+            // Reset to email focus when leaving password fields
             this.setCurrentFocus('EMAIL');
         }
     }
@@ -125,7 +128,7 @@ class TunnelBear {
         const fieldType = this.getFieldType(field);
         console.log('Field input:', field.id, fieldType, field.value);
 
-        if (fieldType === 'diaryId') {
+        if (fieldType === 'userName') {
             this.emailLength = field.value.length;
             this.updateBearAnimation();
         }
@@ -138,8 +141,10 @@ class TunnelBear {
 
     getFieldType(field) {
         const id = field.id || '';
-        if (id === 'diaryId' || id === 'userName') return 'diaryId';
-        if (id === 'entryPassword') return 'password';
+        if (id === 'diaryId') return 'diaryId';
+        if (id === 'userName') return 'userName';
+        if (id === 'userPassword') return 'userPassword';
+        if (id === 'entryPassword') return 'entryPassword';
         if (id === 'entryContent') return 'content';
         if (id === 'feedbackName' || id === 'feedbackEmail' || id === 'feedbackMessage') return 'feedback';
         return 'text';
