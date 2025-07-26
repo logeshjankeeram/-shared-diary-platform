@@ -86,9 +86,10 @@ class LoginCritter {
 
     handleFieldFocus(field) {
         const fieldType = this.getFieldType(field);
+        console.log('Field focus:', field.id, fieldType);
 
-        if (fieldType === 'diaryId' || fieldType === 'userName') {
-            // Start head rotation for text fields
+        if (fieldType === 'diaryId') {
+            // Start head rotation for diary ID field
             setTimeout(() => {
                 this.startHeadRotation(field);
             }, 100);
@@ -103,7 +104,7 @@ class LoginCritter {
     handleFieldBlur(field) {
         const fieldType = this.getFieldType(field);
 
-        if (fieldType === 'diaryId' || fieldType === 'userName') {
+        if (fieldType === 'diaryId') {
             this.stopHeadRotation();
         } else if (fieldType === 'password') {
             this.setShy(false);
@@ -113,12 +114,14 @@ class LoginCritter {
 
     handleFieldInput(field) {
         const fieldType = this.getFieldType(field);
+        console.log('Field input:', field.id, fieldType, field.value);
 
-        if (fieldType === 'diaryId' || fieldType === 'userName') {
+        if (fieldType === 'diaryId') {
             // Update head rotation based on text length
             if (!this.isActive) return;
 
             const fractionComplete = this.calculateFractionComplete(field);
+            console.log('Fraction complete:', fractionComplete);
             this.updateHeadRotation(fractionComplete);
 
             // Check for ecstatic state (@ symbol)
@@ -134,9 +137,10 @@ class LoginCritter {
 
     getFieldType(field) {
         const id = field.id || '';
-        if (id.includes('diaryId') || id.includes('userName')) return 'text';
-        if (id.includes('password')) return 'password';
-        if (id.includes('content')) return 'content';
+        if (id === 'diaryId' || id === 'userName') return 'diaryId';
+        if (id === 'entryPassword') return 'password';
+        if (id === 'entryContent') return 'content';
+        if (id === 'feedbackName' || id === 'feedbackEmail' || id === 'feedbackMessage') return 'feedback';
         return 'text';
     }
 
