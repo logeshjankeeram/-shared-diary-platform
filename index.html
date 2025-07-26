@@ -37,9 +37,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/3.3.0/sha256.min.js"></script>
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/style.css?v=1.0.2">
+    <link rel="stylesheet" href="css/style.css?v=1.0.3">
 
     <script>
+        // Add timestamp for aggressive cache busting
+        const timestamp = Date.now();
+
         tailwind.config = {
             theme: {
                 extend: {
@@ -371,10 +374,10 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="js/supabase.js?v=1.0.2"></script>
-    <script src="js/diary.js?v=1.0.2"></script>
-    <script src="js/main.js?v=1.0.2"></script>
-    <script src="js/tunnel-bear.js?v=1.0.2"></script>
+    <script src="js/supabase.js?v=1.0.3&t=${timestamp}"></script>
+    <script src="js/diary.js?v=1.0.3&t=${timestamp}"></script>
+    <script src="js/main.js?v=1.0.3&t=${timestamp}"></script>
+    <script src="js/tunnel-bear.js?v=1.0.3&t=${timestamp}"></script>
 </body>
 
 </html>

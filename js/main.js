@@ -558,15 +558,31 @@ class DiaryUI {
 
 // Initialize UI when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    // Clear any existing cache
+    // Aggressive cache clearing
     if ('caches' in window) {
         caches.keys().then(cacheNames => {
             cacheNames.forEach(cacheName => {
-                if (cacheName.includes('shared-diary') || cacheName.includes('burner-diary')) {
-                    caches.delete(cacheName);
-                }
+                console.log('Deleting cache:', cacheName);
+                caches.delete(cacheName);
             });
         });
+    }
+
+    // Clear localStorage if needed
+    if (localStorage.getItem('lastVersion') !== '1.0.3') {
+        localStorage.clear();
+        localStorage.setItem('lastVersion', '1.0.3');
+        console.log('Cleared localStorage for new version');
+    }
+
+    // Force reload if this is an old version
+    if (performance.navigation.type === 1) {
+        // This is a reload, check if we need to force a fresh load
+        const urlParams = new URLSearchParams(window.location.search);
+        if (!urlParams.has('fresh')) {
+            window.location.href = window.location.href + (window.location.href.includes('?') ? '&' : '?') + 'fresh=' + Date.now();
+            return;
+        }
     }
 
     window.diaryUI = new DiaryUI();
@@ -575,7 +591,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Handle service worker for PWA functionality
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js?v=1.0.2')
+        navigator.serviceWorker.register('/sw.js?v=1.0.3')
             .then(registration => {
                 console.log('SW registered: ', registration);
 
