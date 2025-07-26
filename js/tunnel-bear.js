@@ -140,12 +140,9 @@ class TunnelBear {
         if (fieldType === 'userName') {
             // Click on name field: start watch bear from watch_bear_1
             this.startWatchingFromBeginning();
-        } else if (fieldType === 'diaryId') {
-            // Click on diary field: start hide bear from hide_bear_1 to hide_bear_5
+        } else if (fieldType === 'diaryId' || fieldType === 'userPassword') {
+            // Click on diary or password field: start hide bear from hide_bear_1 to hide_bear_5
             this.startHidingSequence();
-        } else if (fieldType === 'userPassword') {
-            // Click on password field: stay on hide_bear_5
-            this.stayOnHideBear5();
         }
     }
 
@@ -153,17 +150,25 @@ class TunnelBear {
         const fieldType = this.getFieldType(field);
         console.log('Field blur:', field.id, fieldType);
 
-        // When leaving a field, don't change the bear state
-        // The bear stays in its current state until another field is focused
+        // When leaving sensitive fields, keep bear hidden
+        if (fieldType === 'diaryId' || fieldType === 'userPassword') {
+            console.log('Leaving sensitive field, keeping bear hidden');
+            this.stayOnHideBear5();
+        }
+        // When leaving name field, bear can change state based on next focus
     }
 
     handleFieldInput(field) {
         const fieldType = this.getFieldType(field);
         console.log('Field input:', field.id, fieldType, field.value);
 
-        if (fieldType === 'diaryId' || fieldType === 'userName') {
+        if (fieldType === 'userName') {
             this.emailLength = field.value.length;
             this.updateBearAnimation();
+        } else if (fieldType === 'diaryId' || fieldType === 'userPassword') {
+            // Keep bear hidden while typing in sensitive fields
+            console.log('Keeping bear hidden while typing in sensitive field');
+            this.stayOnHideBear5();
         }
     }
 
