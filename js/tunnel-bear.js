@@ -84,9 +84,19 @@ class TunnelBear {
             }
         });
 
+        // Listen for clicks on sensitive fields (Diary ID and Secret Password)
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('input')) {
+                const fieldType = this.getFieldType(e.target);
+                if (fieldType === 'diaryId' || fieldType === 'userPassword') {
+                    this.handleSensitiveFieldClick(e.target);
+                }
+            }
+        });
+
         // Listen for password visibility toggle
         document.addEventListener('click', (e) => {
-            if (e.target.matches('.password-toggle') || e.target.closest('#toggleUserPassword')) {
+            if (e.target.matches('#toggleUserPassword')) {
                 this.handlePasswordToggle(e.target);
             }
         });
@@ -103,12 +113,9 @@ class TunnelBear {
         const fieldType = this.getFieldType(field);
         console.log('Field focus:', field.id, fieldType);
 
-        if (fieldType === 'userName') {
+        if (fieldType === 'diaryId' || fieldType === 'userName') {
             this.setCurrentFocus('EMAIL');
-        } else if (fieldType === 'diaryId' || fieldType === 'userPassword') {
-            // Hide face when clicking on Diary ID or Secret Password
-            this.setCurrentFocus('PASSWORD');
-        } else if (fieldType === 'entryPassword') {
+        } else if (fieldType === 'password' || fieldType === 'userPassword') {
             this.setCurrentFocus('PASSWORD');
         }
     }
@@ -116,9 +123,9 @@ class TunnelBear {
     handleFieldBlur(field) {
         const fieldType = this.getFieldType(field);
 
-        if (fieldType === 'userName') {
-            // Keep email focus for user name field
-        } else if (fieldType === 'diaryId' || fieldType === 'userPassword' || fieldType === 'entryPassword') {
+        if (fieldType === 'diaryId' || fieldType === 'userName') {
+            // Keep email focus for diary ID and userName fields
+        } else if (fieldType === 'password' || fieldType === 'userPassword') {
             // Reset to email focus when leaving password fields
             this.setCurrentFocus('EMAIL');
         }
@@ -128,9 +135,26 @@ class TunnelBear {
         const fieldType = this.getFieldType(field);
         console.log('Field input:', field.id, fieldType, field.value);
 
-        if (fieldType === 'userName') {
+        if (fieldType === 'diaryId' || fieldType === 'userName') {
             this.emailLength = field.value.length;
             this.updateBearAnimation();
+        }
+    }
+
+    handleSensitiveFieldClick(field) {
+        const fieldType = this.getFieldType(field);
+        console.log('Sensitive field clicked:', field.id, fieldType);
+
+        // Trigger hide bear animation for sensitive fields
+        if (fieldType === 'diaryId' || fieldType === 'userPassword') {
+            this.animateImages(this.hideBearImages, 40, false, () => {
+                // After hiding, show peak animation briefly then return to watching
+                this.animateImages(this.peakBearImages, 50, false, () => {
+                    setTimeout(() => {
+                        this.animateWatchingBearImages();
+                    }, 200);
+                });
+            });
         }
     }
 
@@ -144,7 +168,7 @@ class TunnelBear {
         if (id === 'diaryId') return 'diaryId';
         if (id === 'userName') return 'userName';
         if (id === 'userPassword') return 'userPassword';
-        if (id === 'entryPassword') return 'entryPassword';
+        if (id === 'entryPassword') return 'password';
         if (id === 'entryContent') return 'content';
         if (id === 'feedbackName' || id === 'feedbackEmail' || id === 'feedbackMessage') return 'feedback';
         return 'text';
