@@ -15,7 +15,7 @@ class DiaryDatabase {
     }
 
     // Create a new diary
-    async createDiary(diaryId, userName, type) {
+    async createDiary(diaryId, userName, type, userPassword = '') {
         try {
             const { data, error } = await this.supabase
                 .from('diaries')
@@ -25,6 +25,7 @@ class DiaryDatabase {
                         name: userName,
                         type: type,
                         users: [userName],
+                        user_passwords: userPassword ? { [userName]: userPassword } : {},
                         created_at: new Date().toISOString()
                     }
                 ])
@@ -39,7 +40,7 @@ class DiaryDatabase {
     }
 
     // Join an existing diary
-    async joinDiary(diaryId, userName) {
+    async joinDiary(diaryId, userName, userPassword = '') {
         try {
             // First, get the existing diary
             const { data: existingDiary, error: fetchError } = await this.supabase
@@ -55,11 +56,32 @@ class DiaryDatabase {
                 return { success: true, data: existingDiary, message: 'Already a member' };
             }
 
+            // Check if diary requires password and validate it
+            if (existingDiary.user_passwords && Object.keys(existingDiary.user_passwords).length > 0) {
+                if (!userPassword) {
+                    return { success: false, error: 'This diary requires a password to join' };
+                }
+
+                // Check if the password matches any existing user's password
+                const passwordMatch = Object.values(existingDiary.user_passwords).includes(userPassword);
+                if (!passwordMatch) {
+                    return { success: false, error: 'Incorrect password for this diary' };
+                }
+            }
+
             // Add user to the diary
             const updatedUsers = [...existingDiary.users, userName];
+            const updatedPasswords = {
+                ...existingDiary.user_passwords,
+                ...(userPassword ? { [userName]: userPassword } : {})
+            };
+
             const { data, error } = await this.supabase
                 .from('diaries')
-                .update({ users: updatedUsers })
+                .update({
+                    users: updatedUsers,
+                    user_passwords: updatedPasswords
+                })
                 .eq('diary_id', diaryId)
                 .select();
 
