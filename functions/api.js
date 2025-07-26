@@ -1,6 +1,15 @@
 // Netlify Functions API for secure operations
 
-const { createClient } = require('@supabase/supabase-js');
+let createClient;
+try {
+    const supabaseModule = require('@supabase/supabase-js');
+    createClient = supabaseModule.createClient;
+    console.log('Supabase module loaded successfully');
+    console.log('createClient function:', typeof createClient);
+} catch (requireError) {
+    console.error('Failed to require @supabase/supabase-js:', requireError);
+    createClient = null;
+}
 
 // Initialize Supabase client
 const supabaseUrl = process.env.SUPABASE_URL || 'https://ksabmcevgtgtwtrobyac.supabase.co';
@@ -14,9 +23,14 @@ console.log('Supabase Key length:', supabaseKey ? supabaseKey.length : 0);
 
 let supabase;
 try {
-    console.log('Attempting to create Supabase client...');
-    supabase = createClient(supabaseUrl, supabaseKey);
-    console.log('Supabase client created successfully');
+    if (!createClient) {
+        console.error('createClient function is not available');
+        supabase = null;
+    } else {
+        console.log('Attempting to create Supabase client...');
+        supabase = createClient(supabaseUrl, supabaseKey);
+        console.log('Supabase client created successfully');
+    }
 } catch (error) {
     console.error('Failed to create Supabase client:', error);
     console.error('Error details:', JSON.stringify(error, null, 2));
