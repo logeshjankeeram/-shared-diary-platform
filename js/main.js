@@ -193,10 +193,12 @@ class DiaryUI {
             const result = await window.diaryDB.createDiary(diaryId, userName, diaryType, userPassword);
 
             if (result.success) {
+                console.log('Diary created successfully:', result.data);
                 this.currentDiary = result.data;
                 this.currentUser = userName;
                 this.saveToLocalStorage();
                 this.showDiaryInterface();
+                console.log('Diary interface shown, initializing diary manager...');
                 window.diaryManager.init(this.currentDiary, this.currentUser);
                 this.showMessage('Diary created successfully!', 'success');
             } else {
@@ -208,6 +210,7 @@ class DiaryUI {
                 }
             }
         } catch (error) {
+            console.error('Error in createDiary:', error);
             this.showMessage(error.message, 'error');
             // Clear diary ID field if it's a duplicate error
             if (error.message.includes('already exists') || error.message.includes('Diary ID')) {
