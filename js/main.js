@@ -49,6 +49,15 @@ class DiaryUI {
 
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => this.handleKeyboardShortcuts(e));
+
+        // Feedback modal
+        document.getElementById('openFeedbackBtn')?.addEventListener('click', () => this.showFeedbackModal());
+        document.getElementById('closeFeedbackBtn')?.addEventListener('click', () => this.hideFeedbackModal());
+        document.getElementById('feedbackModal')?.addEventListener('click', (e) => {
+            if (e.target === document.getElementById('feedbackModal')) {
+                this.hideFeedbackModal();
+            }
+        });
     }
 
     // Set default date to today
@@ -370,6 +379,18 @@ class DiaryUI {
         document.body.style.overflow = 'auto';
     }
 
+    // Show feedback modal
+    showFeedbackModal() {
+        document.getElementById('feedbackModal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    // Hide feedback modal
+    hideFeedbackModal() {
+        document.getElementById('feedbackModal').classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+
     // Handle feedback form submission
     handleFeedbackSubmit(event) {
         // Netlify Forms will handle the submission automatically
@@ -393,6 +414,7 @@ class DiaryUI {
         // Escape to close modal
         if (event.key === 'Escape') {
             this.hideHelpModal();
+            this.hideFeedbackModal();
         }
 
         // Arrow keys for timeline navigation
@@ -432,8 +454,8 @@ class DiaryUI {
     showMessage(message, type = 'info') {
         const messageDiv = document.createElement('div');
         messageDiv.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 max-w-sm ${type === 'success' ? 'bg-green-500 text-white' :
-                type === 'error' ? 'bg-red-500 text-white' :
-                    'bg-blue-500 text-white'
+            type === 'error' ? 'bg-red-500 text-white' :
+                'bg-blue-500 text-white'
             }`;
         messageDiv.textContent = message;
 
