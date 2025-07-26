@@ -139,12 +139,10 @@ class TunnelBear {
         console.log('Field focus:', field.id, fieldType);
 
         if (fieldType === 'userName') {
-            // Click on name field: set watch bear to frame 1 immediately
+            // Click on name field: automatically animate through frames 1-2
             this.showBear();
             this.clearTimeouts();
-            this.setCurrentBearImage(this.watchBearImages[1]);
-            // Reset email length to 0 when focusing on name field
-            this.emailLength = 0;
+            this.animateInitialWatchSequence();
         } else if (fieldType === 'diaryId' || fieldType === 'userPassword') {
             // Click on diary or password field: start hide bear from hide_bear_1 to hide_bear_5
             this.startHidingSequence();
@@ -194,6 +192,19 @@ class TunnelBear {
             this.bearElement.style.transition = 'opacity 0.3s ease-in-out';
             this.isVisible = false;
         }
+    }
+
+    // Animate initial watch sequence (frames 1-2) when name field is focused
+    animateInitialWatchSequence() {
+        console.log('Starting initial watch sequence (frames 1-2)...');
+
+        // Animate from frame 1 to frame 2
+        this.setCurrentBearImage(this.watchBearImages[1]);
+
+        setTimeout(() => {
+            this.setCurrentBearImage(this.watchBearImages[2]);
+            console.log('Initial watch sequence complete, now at frame 2');
+        }, 300); // 300ms delay between frames 1 and 2
     }
 
     // Start watching from watch_bear_1 (no animation, just for compatibility)
@@ -295,18 +306,11 @@ class TunnelBear {
     updateWatchingBearImage() {
         console.log('Updating watching bear image, emailLength:', this.emailLength);
 
-        // Direct 1:1 mapping: 1 character = watch_bear_2, 2 characters = watch_bear_3, etc.
-        // But only advance if there are actually characters typed
-        if (this.emailLength === 0) {
-            // No characters typed, stay on watch_bear_1
-            console.log('No characters typed, staying on watch_bear_1');
-            this.setCurrentBearImage(this.watchBearImages[1]);
-        } else {
-            // Characters typed, advance to corresponding frame
-            const frameIndex = Math.min(this.emailLength + 1, this.watchBearImages.length - 1); // +1 because we start from watch_bear_1
-            console.log('Setting bear to frame:', frameIndex, 'for', this.emailLength, 'characters');
-            this.setCurrentBearImage(this.watchBearImages[frameIndex]);
-        }
+        // After initial animation (frames 1-2), each character advances one frame starting from frame 3
+        const frameIndex = Math.min(this.emailLength + 2, this.watchBearImages.length - 1); // +2 because we start from frame 3 after initial animation
+
+        console.log('Setting bear to frame:', frameIndex, 'for', this.emailLength, 'characters');
+        this.setCurrentBearImage(this.watchBearImages[frameIndex]);
     }
 
     animateToFrame(startIndex, targetIndex) {
