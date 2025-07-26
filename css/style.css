@@ -2,7 +2,7 @@
 
 /* Background image */
 body {
-    background: url('/assets/pastel.png') no-repeat center center fixed;
+    background: url('./assets/pastel.png') no-repeat center center fixed;
     background-size: cover;
     min-height: 100vh;
     margin: 0;
