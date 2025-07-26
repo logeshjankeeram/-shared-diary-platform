@@ -138,8 +138,10 @@ class TunnelBear {
         console.log('Field focus:', field.id, fieldType);
 
         if (fieldType === 'userName') {
-            // Click on name field: start watch bear from watch_bear_1
-            this.startWatchingFromBeginning();
+            // Click on name field: set watch bear to frame 1 immediately
+            this.showBear();
+            this.clearTimeouts();
+            this.setCurrentBearImage(this.watchBearImages[1]);
         } else if (fieldType === 'diaryId' || fieldType === 'userPassword') {
             // Click on diary or password field: start hide bear from hide_bear_1 to hide_bear_5
             this.startHidingSequence();
@@ -190,16 +192,11 @@ class TunnelBear {
         }
     }
 
-    // Start watching from watch_bear_1
+    // Start watching from watch_bear_1 (no animation, just for compatibility)
     startWatchingFromBeginning() {
-        console.log('Starting watch sequence from beginning...');
         this.showBear();
         this.clearTimeouts();
-
-        // Start from watch_bear_1 (index 1)
-        this.animateImages(this.watchBearImages.slice(1), 100, false, () => {
-            console.log('Watch sequence complete');
-        });
+        this.setCurrentBearImage(this.watchBearImages[1]);
     }
 
     // Start hiding sequence from hide_bear_1 to hide_bear_5
