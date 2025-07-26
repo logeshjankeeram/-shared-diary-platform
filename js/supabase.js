@@ -47,11 +47,14 @@ class DiaryDatabase {
                     if (response.status === 409) {
                         return { success: false, error: result.message || result.error };
                     }
+                    // For any other error, fall back to client-side approach
+                    console.log('Falling back to client-side approach due to Netlify function error');
                     throw new Error('Netlify function failed');
                 }
             } catch (netlifyError) {
                 console.log('Falling back to client-side Supabase approach');
                 console.error('Netlify error details:', netlifyError);
+                console.log('This is expected behavior when Netlify function is not working');
 
                 // Fallback to client-side approach (without user_passwords column for now)
                 const diaryData = {
