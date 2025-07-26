@@ -201,9 +201,19 @@ class DiaryUI {
                 this.showMessage('Diary created successfully!', 'success');
             } else {
                 this.showMessage(result.error, 'error');
+                // Clear diary ID field if it's a duplicate error
+                if (result.error.includes('already exists') || result.error.includes('Diary ID')) {
+                    document.getElementById('createDiaryId').value = '';
+                    document.getElementById('createDiaryId').focus();
+                }
             }
         } catch (error) {
             this.showMessage(error.message, 'error');
+            // Clear diary ID field if it's a duplicate error
+            if (error.message.includes('already exists') || error.message.includes('Diary ID')) {
+                document.getElementById('createDiaryId').value = '';
+                document.getElementById('createDiaryId').focus();
+            }
         } finally {
             this.hideLoading();
         }

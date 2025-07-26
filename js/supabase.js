@@ -42,7 +42,11 @@ class DiaryDatabase {
                 if (response.ok) {
                     return { success: true, data: result.data };
                 } else {
-                    console.warn('Netlify function failed, trying client-side approach:', result.error);
+                    console.warn('Netlify function failed:', result.error);
+                    // If it's a duplicate key error, return it directly
+                    if (response.status === 409) {
+                        return { success: false, error: result.message || result.error };
+                    }
                     throw new Error('Netlify function failed');
                 }
             } catch (netlifyError) {
@@ -68,6 +72,12 @@ class DiaryDatabase {
                 if (error) {
                     console.error('Client-side insert error:', error);
                     console.error('Error details:', JSON.stringify(error, null, 2));
+
+                    // Handle duplicate key error specifically
+                    if (error.code === '23505') {
+                        throw new Error('Diary ID already exists. Please choose a different Diary ID.');
+                    }
+
                     throw error;
                 }
                 return { success: true, data: data[0] };

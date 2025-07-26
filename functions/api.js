@@ -434,10 +434,27 @@ async function handleCreateDiary(data) {
             .single();
 
         if (existingDiary) {
+            console.log('Diary ID already exists:', diaryId);
             return {
                 statusCode: 409,
                 headers: corsHeaders,
-                body: JSON.stringify({ error: 'Diary ID already exists' })
+                body: JSON.stringify({
+                    error: 'Diary ID already exists',
+                    message: 'Please choose a different Diary ID'
+                })
+            };
+        }
+
+        if (checkError && checkError.code !== 'PGRST116') {
+            // PGRST116 is "not found" which is expected
+            console.error('Error checking for existing diary:', checkError);
+            return {
+                statusCode: 500,
+                headers: corsHeaders,
+                body: JSON.stringify({
+                    error: 'Failed to check for existing diary',
+                    details: checkError.message
+                })
             };
         }
 
