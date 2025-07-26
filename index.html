@@ -94,10 +94,10 @@
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Diary Selection -->
-        <div id="diarySelection" class="mb-8">
-            <div class="bg-white rounded-lg shadow-sm border p-6">
-                <h2 class="text-xl font-lora font-semibold text-gray-900 mb-4">Select or Create Diary</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div id="diarySelection" class="mb-8 flex justify-center">
+            <div class="bg-white rounded-lg shadow-sm border p-6 w-full max-w-md">
+                <h2 class="text-xl font-lora font-semibold text-gray-900 mb-4 text-center">Select or Create Diary</h2>
+                <div class="space-y-4">
                     <div>
                         <label for="diaryId" class="block text-sm font-medium text-gray-700 mb-2">Diary ID</label>
                         <input type="text" id="diaryId" placeholder="e.g., AliceAndBob2025"
@@ -108,202 +108,218 @@
                         <input type="text" id="userName" placeholder="e.g., Alice"
                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
-                </div>
-                <div class="mt-4">
-                    <label for="diaryType" class="block text-sm font-medium text-gray-700 mb-2">Diary Type</label>
-                    <select id="diaryType"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="couple">Couple (2 people)</option>
-                        <option value="group">Group (3+ people)</option>
-                    </select>
-                </div>
-                <div class="mt-6 flex space-x-4">
-                    <button id="joinDiaryBtn"
-                        class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Join
-                        Diary</button>
-                    <button id="createDiaryBtn"
-                        class="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">Create
-                        New Diary</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Diary Interface -->
-        <div id="diaryInterface" class="hidden">
-            <!-- Current Diary Info -->
-            <div class="bg-white rounded-lg shadow-sm border p-4 mb-6">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <h3 class="text-lg font-lora font-semibold text-gray-900">Current Diary: <span
-                                id="currentDiaryId"></span></h3>
-                        <p class="text-sm text-gray-600">Type: <span id="currentDiaryType"></span> | Users: <span
-                                id="currentUsers"></span></p>
-                    </div>
-                    <button id="newDiaryBtn" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Start New
-                        Diary</button>
-                </div>
-            </div>
-
-            <!-- Entry Creation -->
-            <div class="bg-white rounded-lg shadow-sm border p-6 mb-6">
-                <h3 class="text-lg font-lora font-semibold text-gray-900 mb-4">Write Today's Entry</h3>
-                <div class="mb-4">
-                    <label for="entryDate" class="block text-sm font-medium text-gray-700 mb-2">Date</label>
-                    <input type="date" id="entryDate"
-                        class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <div class="mb-4">
-                    <label for="entryContent" class="block text-sm font-medium text-gray-700 mb-2">Your Entry</label>
-                    <textarea id="entryContent" rows="6" placeholder="Write about your day, thoughts, or feelings..."
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
-                </div>
-                <div class="mb-4">
-                    <label for="entryPassword" class="block text-sm font-medium text-gray-700 mb-2">Password (to unlock
-                        later)</label>
-                    <input type="password" id="entryPassword" placeholder="Choose a password for this entry"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <button id="submitEntryBtn"
-                    class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Submit
-                    Entry</button>
-            </div>
-
-            <!-- Entry Unlocking -->
-            <div class="bg-white rounded-lg shadow-sm border p-6 mb-6">
-                <h3 class="text-lg font-lora font-semibold text-gray-900 mb-4">Unlock Shared Entries</h3>
-                <div class="mb-4">
-                    <label for="unlockDate" class="block text-sm font-medium text-gray-700 mb-2">Date to Unlock</label>
-                    <input type="date" id="unlockDate"
-                        class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <div id="passwordInputs" class="mb-4">
-                    <!-- Password inputs will be dynamically generated -->
-                </div>
-                <button id="unlockEntriesBtn"
-                    class="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">Unlock
-                    Entries</button>
-            </div>
-
-            <!-- Timeline View -->
-            <div id="timelineView" class="hidden">
-                <div class="bg-white rounded-lg shadow-sm border p-6">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-lg font-lora font-semibold text-gray-900">Shared Timeline</h3>
-                        <div class="flex space-x-2">
-                            <button id="prevDayBtn" class="text-gray-600 hover:text-gray-900">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 19l-7-7 7-7"></path>
-                                </svg>
-                            </button>
-                            <span id="currentTimelineDate" class="text-sm text-gray-600"></span>
-                            <button id="nextDayBtn" class="text-gray-600 hover:text-gray-900">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 5l7 7-7 7"></path>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                    <div id="timelineContainer" class="relative">
-                        <!-- Timeline content will be dynamically generated -->
-                    </div>
-                    <div class="mt-6 flex justify-center">
-                        <button id="exportPdfBtn"
-                            class="bg-purple-600 text-white px-6 py-2 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500">Export
-                            as PDF</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Help Modal -->
-        <div id="helpModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-            <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
-                <div class="mt-3">
-                    <h3 class="text-lg font-lora font-semibold text-gray-900 mb-4">How to Use Shared Diary</h3>
-                    <div class="space-y-4 text-sm text-gray-700">
-                        <div>
-                            <h4 class="font-semibold text-gray-900">1. Create or Join a Diary</h4>
-                            <p>Enter a unique Diary ID (e.g., "AliceAndBob2025") and your name. Choose whether it's for
-                                a couple or group.</p>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold text-gray-900">2. Write Daily Entries</h4>
-                            <p>Write your thoughts for the day and set a password. Your entry will be locked until all
-                                users share their passwords.</p>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold text-gray-900">3. Share Passwords</h4>
-                            <p>When everyone is ready, share your passwords to unlock and view all entries for that day
-                                side by side.</p>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold text-gray-900">4. View Timeline</h4>
-                            <p>See all shared entries in a synchronized timeline view with highlighted themes and
-                                similarities.</p>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold text-gray-900">5. Export Memories</h4>
-                            <p>Download your shared entries as a PDF to keep as a permanent record of your journey
-                                together.</p>
-                        </div>
-                    </div>
-                    <div class="mt-6 flex justify-end">
-                        <button id="closeHelpBtn"
-                            class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Feedback Modal (hidden by default) -->
-        <div id="feedbackModal"
-            class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-            <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
-                <button id="closeFeedbackBtn" class="absolute top-2 right-2 text-gray-400 hover:text-gray-700">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-                <h3 class="text-lg font-lora font-semibold text-gray-900 mb-4">Share Your Feedback</h3>
-                <form name="feedback" method="POST" data-netlify="true" class="space-y-4">
-                    <div>
-                        <label for="feedbackName" class="block text-sm font-medium text-gray-700 mb-2">Name
-                            (optional)</label>
-                        <input type="text" id="feedbackName" name="name"
+                    <div class="mt-4">
+                        <label for="diaryType" class="block text-sm font-medium text-gray-700 mb-2">Diary Type</label>
+                        <select id="diaryType"
                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="couple">Couple (2 people)</option>
+                            <option value="group">Group (3+ people)</option>
+                        </select>
                     </div>
-                    <div>
-                        <label for="feedbackEmail" class="block text-sm font-medium text-gray-700 mb-2">Email
-                            (optional)</label>
-                        <input type="email" id="feedbackEmail" name="email"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <div class="mt-6 flex flex-col space-y-3">
+                        <button id="joinDiaryBtn"
+                            class="w-full bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Join
+                            Diary</button>
+                        <button id="createDiaryBtn"
+                            class="w-full bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">Create
+                            New Diary</button>
                     </div>
-                    <div>
-                        <label for="feedbackMessage"
-                            class="block text-sm font-medium text-gray-700 mb-2">Message</label>
-                        <textarea id="feedbackMessage" name="message" rows="4"
-                            placeholder="Share your thoughts, suggestions, or report any issues..."
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
-                    </div>
-                    <button type="submit"
-                        class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Send
-                        Feedback</button>
-                </form>
+                </div>
             </div>
-        </div>
 
-        <!-- Floating Feedback Button -->
-        <button id="openFeedbackBtn"
-            class="fixed bottom-6 right-6 z-40 bg-blue-600 text-white rounded-full shadow-lg p-3 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center">
-            <svg class="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8s-9-3.582-9-8 4.03-8 9-8 9 3.582 9 8z" />
-            </svg>
-            Feedback
-        </button>
+            <!-- Diary Interface -->
+            <div id="diaryInterface" class="hidden flex justify-center">
+                <div class="w-full max-w-md">
+                    <!-- Current Diary Info -->
+                    <div class="bg-white rounded-lg shadow-sm border p-4 mb-6">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h3 class="text-lg font-lora font-semibold text-gray-900">Current Diary: <span
+                                        id="currentDiaryId"></span></h3>
+                                <p class="text-sm text-gray-600">Type: <span id="currentDiaryType"></span> | Users:
+                                    <span id="currentUsers"></span>
+                                </p>
+                            </div>
+                            <button id="newDiaryBtn" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Start
+                                New
+                                Diary</button>
+                        </div>
+                    </div>
+
+                    <!-- Entry Creation -->
+                    <div class="bg-white rounded-lg shadow-sm border p-6 mb-6">
+                        <h3 class="text-lg font-lora font-semibold text-gray-900 mb-4">Write Today's Entry</h3>
+                        <div class="mb-4">
+                            <label for="entryDate" class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                            <input type="date" id="entryDate"
+                                class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div class="mb-4">
+                            <label for="entryContent" class="block text-sm font-medium text-gray-700 mb-2">Your
+                                Entry</label>
+                            <textarea id="entryContent" rows="6"
+                                placeholder="Write about your day, thoughts, or feelings..."
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label for="entryPassword" class="block text-sm font-medium text-gray-700 mb-2">Password (to
+                                unlock
+                                later)</label>
+                            <input type="password" id="entryPassword" placeholder="Choose a password for this entry"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <button id="submitEntryBtn"
+                            class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Submit
+                            Entry</button>
+                    </div>
+
+                    <!-- Entry Unlocking -->
+                    <div class="bg-white rounded-lg shadow-sm border p-6 mb-6">
+                        <h3 class="text-lg font-lora font-semibold text-gray-900 mb-4">Unlock Shared Entries</h3>
+                        <div class="mb-4">
+                            <label for="unlockDate" class="block text-sm font-medium text-gray-700 mb-2">Date to
+                                Unlock</label>
+                            <input type="date" id="unlockDate"
+                                class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div id="passwordInputs" class="mb-4">
+                            <!-- Password inputs will be dynamically generated -->
+                        </div>
+                        <button id="unlockEntriesBtn"
+                            class="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">Unlock
+                            Entries</button>
+                    </div>
+
+                    <!-- Timeline View -->
+                    <div id="timelineView" class="hidden">
+                        <div class="bg-white rounded-lg shadow-sm border p-6">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="text-lg font-lora font-semibold text-gray-900">Shared Timeline</h3>
+                                <div class="flex space-x-2">
+                                    <button id="prevDayBtn" class="text-gray-600 hover:text-gray-900">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 19l-7-7 7-7"></path>
+                                        </svg>
+                                    </button>
+                                    <span id="currentTimelineDate" class="text-sm text-gray-600"></span>
+                                    <button id="nextDayBtn" class="text-gray-600 hover:text-gray-900">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="timelineContainer" class="relative">
+                                <!-- Timeline content will be dynamically generated -->
+                            </div>
+                            <div class="mt-6 flex justify-center">
+                                <button id="exportPdfBtn"
+                                    class="bg-purple-600 text-white px-6 py-2 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500">Export
+                                    as PDF</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Help Modal -->
+            <div id="helpModal"
+                class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+                <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
+                    <div class="mt-3">
+                        <h3 class="text-lg font-lora font-semibold text-gray-900 mb-4">How to Use Shared Diary</h3>
+                        <div class="space-y-4 text-sm text-gray-700">
+                            <div>
+                                <h4 class="font-semibold text-gray-900">1. Create or Join a Diary</h4>
+                                <p>Enter a unique Diary ID (e.g., "AliceAndBob2025") and your name. Choose whether
+                                    it's
+                                    for
+                                    a couple or group.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-900">2. Write Daily Entries</h4>
+                                <p>Write your thoughts for the day and set a password. Your entry will be locked
+                                    until
+                                    all
+                                    users share their passwords.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-900">3. Share Passwords</h4>
+                                <p>When everyone is ready, share your passwords to unlock and view all entries for
+                                    that
+                                    day
+                                    side by side.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-900">4. View Timeline</h4>
+                                <p>See all shared entries in a synchronized timeline view with highlighted themes
+                                    and
+                                    similarities.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-900">5. Export Memories</h4>
+                                <p>Download your shared entries as a PDF to keep as a permanent record of your
+                                    journey
+                                    together.</p>
+                            </div>
+                        </div>
+                        <div class="mt-6 flex justify-end">
+                            <button id="closeHelpBtn"
+                                class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feedback Modal (hidden by default) -->
+            <div id="feedbackModal"
+                class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+                <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
+                    <button id="closeFeedbackBtn" class="absolute top-2 right-2 text-gray-400 hover:text-gray-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                    <h3 class="text-lg font-lora font-semibold text-gray-900 mb-4">Share Your Feedback</h3>
+                    <form name="feedback" method="POST" data-netlify="true" class="space-y-4">
+                        <div>
+                            <label for="feedbackName" class="block text-sm font-medium text-gray-700 mb-2">Name
+                                (optional)</label>
+                            <input type="text" id="feedbackName" name="name"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="feedbackEmail" class="block text-sm font-medium text-gray-700 mb-2">Email
+                                (optional)</label>
+                            <input type="email" id="feedbackEmail" name="email"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="feedbackMessage"
+                                class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                            <textarea id="feedbackMessage" name="message" rows="4"
+                                placeholder="Share your thoughts, suggestions, or report any issues..."
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+                        </div>
+                        <button type="submit"
+                            class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Send
+                            Feedback</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Floating Feedback Button -->
+            <button id="openFeedbackBtn"
+                class="fixed bottom-6 right-6 z-40 bg-blue-600 text-white rounded-full shadow-lg p-3 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center">
+                <svg class="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8s-9-3.582-9-8 4.03-8 9-8 9 3.582 9 8z" />
+                </svg>
+                Feedback
+            </button>
     </main>
 
     <!-- Footer -->
