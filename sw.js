@@ -62,8 +62,8 @@ self.addEventListener('fetch', event => {
             cache: isMobile ? 'no-cache' : 'default'
         })
             .then(response => {
-                // Only cache successful responses
-                if (response.status === 200) {
+                // Only cache successful GET responses (exclude POST, PUT, DELETE)
+                if (response.status === 200 && event.request.method === 'GET') {
                     const responseClone = response.clone();
                     caches.open(CACHE_NAME).then(cache => {
                         cache.put(event.request, responseClone);
@@ -72,8 +72,12 @@ self.addEventListener('fetch', event => {
                 return response;
             })
             .catch(() => {
-                // Fallback to cache if network fails
-                return caches.match(event.request);
+                // Fallback to cache if network fails (only for GET requests)
+                if (event.request.method === 'GET') {
+                    return caches.match(event.request);
+                }
+                // For non-GET requests, just return the error
+                return new Response('Network error', { status: 503 });
             })
     );
 });
