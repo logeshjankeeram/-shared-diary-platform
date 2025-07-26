@@ -398,53 +398,7 @@
                 </div>
             </div>
 
-            <!-- Feedback Modal (hidden by default) -->
-            <div id="feedbackModal"
-                class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-                <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
-                    <button id="closeFeedbackBtn" class="absolute top-2 right-2 text-gray-400 hover:text-gray-700">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                    <h3 class="text-lg font-lora font-semibold text-gray-900 mb-4">Share Your Feedback</h3>
-                    <form name="feedback" method="POST" data-netlify="true" class="space-y-4">
-                        <div>
-                            <label for="feedbackName" class="block text-sm font-medium text-gray-700 mb-2">Name
-                                (optional)</label>
-                            <input type="text" id="feedbackName" name="name"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                        <div>
-                            <label for="feedbackEmail" class="block text-sm font-medium text-gray-700 mb-2">Email
-                                (optional)</label>
-                            <input type="email" id="feedbackEmail" name="email"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                        <div>
-                            <label for="feedbackMessage"
-                                class="block text-sm font-medium text-gray-700 mb-2">Message</label>
-                            <textarea id="feedbackMessage" name="message" rows="4"
-                                placeholder="Share your thoughts, suggestions, or report any issues..."
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
-                        </div>
-                        <button type="submit"
-                            class="bg-matcha-medium text-white px-6 py-2 rounded-md hover:bg-matcha-dark focus:outline-none focus:ring-2 focus:ring-matcha-dark">Send
-                            Feedback</button>
-                    </form>
-                </div>
-            </div>
 
-            <!-- Floating Feedback Button -->
-            <button id="openFeedbackBtn"
-                class="fixed bottom-6 right-6 z-40 bg-matcha-medium text-white rounded-full shadow-lg p-3 hover:bg-matcha-dark focus:outline-none focus:ring-2 focus:ring-matcha-dark flex items-center">
-                <svg class="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8s-9-3.582-9-8 4.03-8 9-8 9 3.582 9 8z" />
-                </svg>
-                Feedback
-            </button>
     </main>
 
     <!-- Footer -->

@@ -67,20 +67,8 @@ class DiaryUI {
         // Notifications
         document.getElementById('notificationBtn')?.addEventListener('click', () => this.toggleNotifications());
 
-        // Form submissions
-        document.querySelector('form[name="feedback"]')?.addEventListener('submit', (e) => this.handleFeedbackSubmit(e));
-
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => this.handleKeyboardShortcuts(e));
-
-        // Feedback modal
-        document.getElementById('openFeedbackBtn')?.addEventListener('click', () => this.showFeedbackModal());
-        document.getElementById('closeFeedbackBtn')?.addEventListener('click', () => this.hideFeedbackModal());
-        document.getElementById('feedbackModal')?.addEventListener('click', (e) => {
-            if (e.target === document.getElementById('feedbackModal')) {
-                this.hideFeedbackModal();
-            }
-        });
 
         // Window resize for background switching
         window.addEventListener('resize', () => this.setMobileBackground());
@@ -491,31 +479,7 @@ class DiaryUI {
         document.body.style.overflow = 'auto';
     }
 
-    // Show feedback modal
-    showFeedbackModal() {
-        document.getElementById('feedbackModal').classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-    }
 
-    // Hide feedback modal
-    hideFeedbackModal() {
-        document.getElementById('feedbackModal').classList.add('hidden');
-        document.body.style.overflow = 'auto';
-    }
-
-    // Handle feedback form submission
-    handleFeedbackSubmit(event) {
-        // Netlify Forms will handle the submission automatically
-        this.showMessage('Thank you for your feedback!', 'success');
-
-        // Animate tunnel bear success
-        if (window.tunnelBear) {
-            window.tunnelBear.animateSuccess();
-        }
-
-        // Clear form
-        event.target.reset();
-    }
 
     // Handle keyboard shortcuts
     handleKeyboardShortcuts(event) {
@@ -531,7 +495,6 @@ class DiaryUI {
         // Escape to close modal
         if (event.key === 'Escape') {
             this.hideHelpModal();
-            this.hideFeedbackModal();
         }
 
         // Arrow keys for timeline navigation
