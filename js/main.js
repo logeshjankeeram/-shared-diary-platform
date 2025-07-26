@@ -431,34 +431,88 @@ class DiaryUI {
             }
         }, 500);
 
+        // Immediate debugging - check if interface is actually in DOM
+        setTimeout(() => {
+            console.log('=== IMMEDIATE DEBUGGING ===');
+            const interface = document.getElementById('diaryInterface');
+            console.log('Interface element:', interface);
+            console.log('Interface parent:', interface?.parentElement);
+            console.log('Interface computed styles:', interface ? window.getComputedStyle(interface) : 'N/A');
+            console.log('Interface offsetParent:', interface?.offsetParent);
+            console.log('Interface getBoundingClientRect:', interface?.getBoundingClientRect());
+            console.log('Body children count:', document.body.children.length);
+            console.log('Main children count:', document.querySelector('main')?.children.length);
+
+            // Check if interface is actually visible
+            if (interface) {
+                const rect = interface.getBoundingClientRect();
+                console.log('Interface dimensions:', rect);
+                console.log('Interface is visible:', rect.width > 0 && rect.height > 0);
+            }
+        }, 100);
+
         // Test: Try to manually show the interface
         setTimeout(() => {
             console.log('Testing manual interface visibility...');
             const testInterface = document.getElementById('diaryInterface');
             if (testInterface) {
-                testInterface.style.display = 'flex';
-                testInterface.style.visibility = 'visible';
-                testInterface.style.opacity = '1';
-                testInterface.style.position = 'relative';
-                testInterface.style.zIndex = '9999';
-                testInterface.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
-                testInterface.style.padding = '20px';
-                testInterface.style.borderRadius = '10px';
-                testInterface.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-                console.log('Manual visibility set for diaryInterface');
+                // Completely recreate the interface in a new location
+                const newInterface = document.createElement('div');
+                newInterface.id = 'diaryInterfaceNew';
+                newInterface.innerHTML = testInterface.innerHTML;
+                newInterface.style.cssText = `
+                    position: fixed !important;
+                    top: 50% !important;
+                    left: 50% !important;
+                    transform: translate(-50%, -50%) !important;
+                    width: 90% !important;
+                    max-width: 600px !important;
+                    background: white !important;
+                    padding: 20px !important;
+                    border-radius: 10px !important;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+                    z-index: 10000 !important;
+                    display: flex !important;
+                    flex-direction: column !important;
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                    border: 3px solid #86b049 !important;
+                `;
 
-                // Force scroll to top
-                window.scrollTo(0, 0);
+                // Add close button
+                const closeBtn = document.createElement('button');
+                closeBtn.textContent = '×';
+                closeBtn.style.cssText = `
+                    position: absolute;
+                    top: 10px;
+                    right: 15px;
+                    background: #ef4444;
+                    color: white;
+                    border: none;
+                    border-radius: 50%;
+                    width: 30px;
+                    height: 30px;
+                    font-size: 20px;
+                    cursor: pointer;
+                    z-index: 10001;
+                `;
+                closeBtn.onclick = () => document.body.removeChild(newInterface);
+                newInterface.appendChild(closeBtn);
+
+                document.body.appendChild(newInterface);
+                console.log('NEW INTERFACE CREATED AND ADDED TO BODY');
 
                 // Add a visible indicator
                 const indicator = document.createElement('div');
-                indicator.style.cssText = 'position: fixed; top: 10px; left: 10px; background: red; color: white; padding: 10px; z-index: 10000; border-radius: 5px;';
-                indicator.textContent = 'DIARY INTERFACE SHOULD BE VISIBLE';
+                indicator.style.cssText = 'position: fixed; top: 10px; left: 10px; background: red; color: white; padding: 10px; z-index: 10002; border-radius: 5px; font-weight: bold;';
+                indicator.textContent = 'NEW DIARY INTERFACE CREATED!';
                 document.body.appendChild(indicator);
 
                 setTimeout(() => {
-                    document.body.removeChild(indicator);
-                }, 5000);
+                    if (document.body.contains(indicator)) {
+                        document.body.removeChild(indicator);
+                    }
+                }, 10000);
             } else {
                 console.error('diaryInterface element not found!');
             }
