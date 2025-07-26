@@ -21,26 +21,50 @@ class DiaryDatabase {
                 return { success: false, error: 'Secret password is required to create a diary' };
             }
 
-            const response = await fetch('/.netlify/functions/api', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    action: 'createDiary',
-                    diaryId,
-                    userName,
-                    type,
-                    userPassword
-                })
-            });
+            // Try Netlify function first
+            try {
+                const response = await fetch('/.netlify/functions/api', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'createDiary',
+                        diaryId,
+                        userName,
+                        type,
+                        userPassword
+                    })
+                });
 
-            const result = await response.json();
+                const result = await response.json();
 
-            if (response.ok) {
-                return { success: true, data: result.data };
-            } else {
-                return { success: false, error: result.error };
+                if (response.ok) {
+                    return { success: true, data: result.data };
+                } else {
+                    console.warn('Netlify function failed, trying client-side approach:', result.error);
+                    throw new Error('Netlify function failed');
+                }
+            } catch (netlifyError) {
+                console.log('Falling back to client-side Supabase approach');
+
+                // Fallback to client-side approach
+                const { data, error } = await this.supabase
+                    .from('diaries')
+                    .insert([
+                        {
+                            diary_id: diaryId,
+                            name: userName,
+                            type: type,
+                            users: [userName],
+                            user_passwords: { [userName]: userPassword },
+                            created_at: new Date().toISOString()
+                        }
+                    ])
+                    .select();
+
+                if (error) throw error;
+                return { success: true, data: data[0] };
             }
         } catch (error) {
             console.error('Error creating diary:', error);
@@ -55,25 +79,71 @@ class DiaryDatabase {
                 return { success: false, error: 'Secret password is required to join this diary' };
             }
 
-            const response = await fetch('/.netlify/functions/api', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    action: 'joinDiary',
-                    diaryId,
-                    userName,
-                    userPassword
-                })
-            });
+            // Try Netlify function first
+            try {
+                const response = await fetch('/.netlify/functions/api', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'joinDiary',
+                        diaryId,
+                        userName,
+                        userPassword
+                    })
+                });
 
-            const result = await response.json();
+                const result = await response.json();
 
-            if (response.ok) {
-                return { success: true, data: result.data, message: result.message };
-            } else {
-                return { success: false, error: result.error };
+                if (response.ok) {
+                    return { success: true, data: result.data, message: result.message };
+                } else {
+                    console.warn('Netlify function failed, trying client-side approach:', result.error);
+                    throw new Error('Netlify function failed');
+                }
+            } catch (netlifyError) {
+                console.log('Falling back to client-side Supabase approach');
+
+                // Fallback to client-side approach
+                const { data: existingDiary, error: fetchError } = await this.supabase
+                    .from('diaries')
+                    .select('*')
+                    .eq('diary_id', diaryId)
+                    .single();
+
+                if (fetchError) throw fetchError;
+
+                // Check if user is already in the diary
+                if (existingDiary.users.includes(userName)) {
+                    return { success: true, data: existingDiary, message: 'Already a member' };
+                }
+
+                // Check if the password matches any existing user's password
+                const existingPasswords = existingDiary.user_passwords || {};
+                const passwordMatch = Object.values(existingPasswords).includes(userPassword);
+                if (!passwordMatch) {
+                    return { success: false, error: 'Incorrect secret password for this diary' };
+                }
+
+                // Add user to the diary
+                const updatedUsers = [...existingDiary.users, userName];
+                const updatedPasswords = {
+                    ...existingDiary.user_passwords,
+                    [userName]: userPassword
+                };
+
+                const { data, error } = await this.supabase
+                    .from('diaries')
+                    .update({
+                        users: updatedUsers,
+                        user_passwords: updatedPasswords
+                    })
+                    .eq('diary_id', diaryId)
+                    .select();
+
+                if (error) throw error;
+                return { success: true, data: data[0] };
             }
         } catch (error) {
             console.error('Error joining diary:', error);
