@@ -1,0 +1,302 @@
+/* Login Critter - Animated Avatar for Web */
+
+.critter-container {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    margin: 0 auto 2rem;
+    border-radius: 50%;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f3e8ff 0%, #fdf2f8 100%);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.critter {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-origin: center;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Critter Parts */
+.critter-body {
+    position: absolute;
+    width: 80px;
+    height: 60px;
+    background: #8b5cf6;
+    border-radius: 40px 40px 20px 20px;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: all 0.2s ease-in-out;
+}
+
+.critter-head {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    background: #a855f7;
+    border-radius: 50%;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: all 0.2s ease-in-out;
+}
+
+.critter-ear {
+    position: absolute;
+    width: 20px;
+    height: 25px;
+    background: #c084fc;
+    border-radius: 10px;
+    top: -5px;
+    transition: all 0.2s ease-in-out;
+}
+
+.critter-ear.left {
+    left: 10px;
+    transform: rotate(-15deg);
+}
+
+.critter-ear.right {
+    right: 10px;
+    transform: rotate(15deg);
+}
+
+.critter-eye {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: #1f2937;
+    border-radius: 50%;
+    top: 25px;
+    transition: all 0.125s ease-in-out;
+}
+
+.critter-eye.left {
+    left: 20px;
+}
+
+.critter-eye.right {
+    right: 20px;
+}
+
+.critter-eye.ecstatic {
+    width: 13px;
+    height: 13px;
+    background: #059669;
+}
+
+.critter-muzzle {
+    position: absolute;
+    width: 35px;
+    height: 25px;
+    background: #ddd6fe;
+    border-radius: 15px 15px 20px 20px;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: all 0.2s ease-in-out;
+}
+
+.critter-nose {
+    position: absolute;
+    width: 6px;
+    height: 4px;
+    background: #1f2937;
+    border-radius: 3px;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.critter-mouth {
+    position: absolute;
+    width: 20px;
+    height: 8px;
+    background: #1f2937;
+    border-radius: 0 0 10px 10px;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: all 0.125s ease-in-out;
+}
+
+.critter-mouth.ecstatic {
+    width: 25px;
+    height: 12px;
+    border-radius: 0 0 12px 12px;
+    background: #059669;
+}
+
+.critter-arm {
+    position: absolute;
+    width: 15px;
+    height: 25px;
+    background: #a855f7;
+    border-radius: 7px;
+    bottom: 35px;
+    transition: all 0.2s ease-in-out;
+}
+
+.critter-arm.left {
+    left: 15px;
+    transform: rotate(-20deg);
+}
+
+.critter-arm.right {
+    right: 15px;
+    transform: rotate(20deg);
+}
+
+/* Animation States */
+
+/* Neutral State (default) */
+.critter.neutral .critter-head {
+    transform: translateX(-50%) rotate(0deg);
+}
+
+.critter.neutral .critter-eye {
+    width: 12px;
+    height: 12px;
+    background: #1f2937;
+}
+
+.critter.neutral .critter-mouth {
+    width: 20px;
+    height: 8px;
+    background: #1f2937;
+}
+
+.critter.neutral .critter-arm {
+    transform: rotate(-20deg);
+}
+
+.critter.neutral .critter-arm.right {
+    transform: rotate(20deg);
+}
+
+/* Active State - Head rotation based on text input */
+.critter.active .critter-head {
+    transform: translateX(-50%) rotate(var(--head-rotation, 0deg));
+}
+
+.critter.active .critter-eye {
+    width: 11px;
+    height: 11px;
+}
+
+/* Ecstatic State - When typing @ symbol */
+.critter.ecstatic .critter-eye {
+    width: 13px;
+    height: 13px;
+    background: #059669;
+}
+
+.critter.ecstatic .critter-mouth {
+    width: 25px;
+    height: 12px;
+    border-radius: 0 0 12px 12px;
+    background: #059669;
+}
+
+/* Shy State - When focusing password field */
+.critter.shy .critter-arm.left {
+    transform: rotate(-45deg) translateY(-5px);
+}
+
+.critter.shy .critter-arm.right {
+    transform: rotate(45deg) translateY(-5px);
+}
+
+/* Peek State - When password is visible */
+.critter.peek .critter-eye {
+    width: 8px;
+    height: 8px;
+    background: #dc2626;
+}
+
+.critter.peek .critter-mouth {
+    width: 15px;
+    height: 6px;
+    background: #dc2626;
+}
+
+/* Animation Classes */
+.critter.animate {
+    animation: critterBounce 0.3s ease-in-out;
+}
+
+@keyframes critterBounce {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .critter-container {
+        width: 120px;
+        height: 120px;
+        margin-bottom: 1.5rem;
+    }
+
+    .critter-body {
+        width: 60px;
+        height: 45px;
+        bottom: 15px;
+    }
+
+    .critter-head {
+        width: 52px;
+        height: 52px;
+        top: 22px;
+    }
+
+    .critter-ear {
+        width: 15px;
+        height: 19px;
+    }
+
+    .critter-eye {
+        width: 9px;
+        height: 9px;
+        top: 19px;
+    }
+
+    .critter-muzzle {
+        width: 26px;
+        height: 19px;
+        bottom: 11px;
+    }
+
+    .critter-arm {
+        width: 11px;
+        height: 19px;
+        bottom: 26px;
+    }
+}
+
+/* Debug Mode (optional) */
+.critter-debug {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    z-index: 1000;
+}
+
+.critter-debug.hidden {
+    display: none;
+}

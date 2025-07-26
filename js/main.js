@@ -396,6 +396,11 @@ class DiaryUI {
         // Netlify Forms will handle the submission automatically
         this.showMessage('Thank you for your feedback!', 'success');
 
+        // Animate critter success
+        if (window.critter) {
+            window.critter.animateSuccess();
+        }
+
         // Clear form
         event.target.reset();
     }
@@ -460,6 +465,15 @@ class DiaryUI {
         messageDiv.textContent = message;
 
         document.body.appendChild(messageDiv);
+
+        // Animate critter based on message type
+        if (window.critter) {
+            if (type === 'success') {
+                window.critter.animateSuccess();
+            } else if (type === 'error') {
+                window.critter.animateError();
+            }
+        }
 
         // Auto remove after 5 seconds
         setTimeout(() => {
