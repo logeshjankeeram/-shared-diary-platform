@@ -420,7 +420,26 @@ class DiaryUI {
                 testInterface.style.display = 'flex';
                 testInterface.style.visibility = 'visible';
                 testInterface.style.opacity = '1';
+                testInterface.style.position = 'relative';
+                testInterface.style.zIndex = '9999';
+                testInterface.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+                testInterface.style.padding = '20px';
+                testInterface.style.borderRadius = '10px';
+                testInterface.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
                 console.log('Manual visibility set for diaryInterface');
+
+                // Force scroll to top
+                window.scrollTo(0, 0);
+
+                // Add a visible indicator
+                const indicator = document.createElement('div');
+                indicator.style.cssText = 'position: fixed; top: 10px; left: 10px; background: red; color: white; padding: 10px; z-index: 10000; border-radius: 5px;';
+                indicator.textContent = 'DIARY INTERFACE SHOULD BE VISIBLE';
+                document.body.appendChild(indicator);
+
+                setTimeout(() => {
+                    document.body.removeChild(indicator);
+                }, 5000);
             } else {
                 console.error('diaryInterface element not found!');
             }
