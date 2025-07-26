@@ -47,23 +47,30 @@ class DiaryDatabase {
                 }
             } catch (netlifyError) {
                 console.log('Falling back to client-side Supabase approach');
+                console.error('Netlify error details:', netlifyError);
 
                 // Fallback to client-side approach
+                const diaryData = {
+                    diary_id: diaryId,
+                    name: userName,
+                    type: type,
+                    users: [userName],
+                    user_passwords: { [userName]: userPassword },
+                    created_at: new Date().toISOString()
+                };
+
+                console.log('Attempting client-side insert with data:', diaryData);
+
                 const { data, error } = await this.supabase
                     .from('diaries')
-                    .insert([
-                        {
-                            diary_id: diaryId,
-                            name: userName,
-                            type: type,
-                            users: [userName],
-                            user_passwords: { [userName]: userPassword },
-                            created_at: new Date().toISOString()
-                        }
-                    ])
+                    .insert([diaryData])
                     .select();
 
-                if (error) throw error;
+                if (error) {
+                    console.error('Client-side insert error:', error);
+                    console.error('Error details:', JSON.stringify(error, null, 2));
+                    throw error;
+                }
                 return { success: true, data: data[0] };
             }
         } catch (error) {

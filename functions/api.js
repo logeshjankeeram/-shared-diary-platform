@@ -12,6 +12,48 @@ console.log('Supabase Key:', supabaseKey ? 'Set' : 'Missing');
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+// Test Supabase connection
+async function handleTestSupabase() {
+    try {
+        // Test basic connection
+        const { data, error } = await supabase
+            .from('diaries')
+            .select('count')
+            .limit(1);
+
+        if (error) {
+            return {
+                statusCode: 500,
+                headers: corsHeaders,
+                body: JSON.stringify({
+                    error: 'Supabase connection failed',
+                    details: error.message,
+                    code: error.code
+                })
+            };
+        }
+
+        return {
+            statusCode: 200,
+            headers: corsHeaders,
+            body: JSON.stringify({
+                success: true,
+                message: 'Supabase connection successful',
+                data: data
+            })
+        };
+    } catch (error) {
+        return {
+            statusCode: 500,
+            headers: corsHeaders,
+            body: JSON.stringify({
+                error: 'Supabase test failed',
+                details: error.message
+            })
+        };
+    }
+}
+
 // Utility function to hash password
 async function hashPassword(password) {
     const encoder = new TextEncoder();
@@ -54,6 +96,8 @@ exports.handler = async (event, context) => {
                         timestamp: new Date().toISOString()
                     })
                 };
+            case 'testSupabase':
+                return await handleTestSupabase();
             case 'createDiary':
                 return await handleCreateDiary(data);
             case 'joinDiary':
@@ -326,27 +370,34 @@ async function handleCreateDiary(data) {
         }
 
         // Create the diary
+        const diaryData = {
+            diary_id: diaryId,
+            name: userName,
+            type: type,
+            users: [userName],
+            user_passwords: { [userName]: userPassword },
+            created_at: new Date().toISOString()
+        };
+
+        console.log('Attempting to insert diary data:', JSON.stringify(diaryData, null, 2));
+
         const { data: newDiary, error: createError } = await supabase
             .from('diaries')
-            .insert([
-                {
-                    diary_id: diaryId,
-                    name: userName,
-                    type: type,
-                    users: [userName],
-                    user_passwords: { [userName]: userPassword },
-                    created_at: new Date().toISOString()
-                }
-            ])
+            .insert([diaryData])
             .select()
             .single();
 
         if (createError) {
             console.error('Create diary error:', createError);
+            console.error('Error details:', JSON.stringify(createError, null, 2));
             return {
                 statusCode: 500,
                 headers: corsHeaders,
-                body: JSON.stringify({ error: 'Failed to create diary' })
+                body: JSON.stringify({
+                    error: 'Failed to create diary',
+                    details: createError.message,
+                    code: createError.code
+                })
             };
         }
 
