@@ -84,16 +84,16 @@ class TunnelBear {
             }
         });
 
-        // Listen for clicks on sensitive fields (Diary ID and Secret Password)
-        document.addEventListener('click', (e) => {
-            console.log('Click event detected on:', e.target);
+        // Listen for focus events on input fields (this is how the original tunnel bear works)
+        document.addEventListener('focusin', (e) => {
             if (e.target.matches('input')) {
-                console.log('Input field clicked:', e.target.id);
                 const fieldType = this.getFieldType(e.target);
-                console.log('Field type detected:', fieldType);
+                console.log('Field focused:', e.target.id, fieldType);
+
+                // Trigger hide animation when focusing on sensitive fields
                 if (fieldType === 'diaryId' || fieldType === 'userPassword') {
-                    console.log('Triggering sensitive field click for:', fieldType);
-                    this.handleSensitiveFieldClick(e.target);
+                    console.log('Triggering hide animation for sensitive field:', fieldType);
+                    this.handleSensitiveFieldFocus(e.target);
                 }
             }
         });
@@ -145,15 +145,16 @@ class TunnelBear {
         }
     }
 
-    handleSensitiveFieldClick(field) {
+    handleSensitiveFieldFocus(field) {
         const fieldType = this.getFieldType(field);
-        console.log('Sensitive field clicked:', field.id, fieldType);
+        console.log('Sensitive field focused:', field.id, fieldType);
         console.log('Hide bear images available:', this.hideBearImages.length);
         console.log('Peak bear images available:', this.peakBearImages.length);
 
-        // Trigger hide bear animation for sensitive fields
+        // Trigger hide bear animation for sensitive fields (following original tunnel bear logic)
         if (fieldType === 'diaryId' || fieldType === 'userPassword') {
             console.log('Starting hide animation...');
+            // First time entering sensitive field - animate hide bear images
             this.animateImages(this.hideBearImages, 40, false, () => {
                 console.log('Hide animation complete, starting peak animation...');
                 // After hiding, show peak animation briefly then return to watching
