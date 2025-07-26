@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shared Diary for Connections</title>
+    <title>Burner Diary</title>
     <meta name="description"
         content="A private diary platform for couples, friends, and groups to write and share daily entries with password-protected unlocking.">
     <meta name="keywords" content="diary, couples, friends, journal, shared diary, private entries">
-    <meta name="author" content="Shared Diary Platform">
+    <meta name="author" content="Burner Diary">
 
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json">
@@ -24,7 +24,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Indie+Flower:wght@400&family=Special+Elite:wght@400&display=swap"
         rel="stylesheet">
 
     <!-- jsPDF for PDF export -->
@@ -45,7 +45,9 @@
                 extend: {
                     fontFamily: {
                         'lora': ['Lora', 'serif'],
-                        'opensans': ['Open Sans', 'sans-serif']
+                        'opensans': ['Open Sans', 'sans-serif'],
+                        'handwritten': ['Indie Flower', 'cursive'],
+                        'typewriter': ['Special Elite', 'monospace']
                     },
                     colors: {
                         'matcha-light': '#f0f9f0',
@@ -66,8 +68,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center py-4">
                 <div class="flex items-center">
-                    <h1 class="text-2xl font-lora font-semibold text-gray-900">Shared Diary</h1>
-                    <span class="ml-2 text-sm text-gray-500">for Connections</span>
+                    <h1 class="text-3xl font-handwritten font-semibold text-matcha-dark">Burner Diary</h1>
                 </div>
                 <div class="flex items-center space-x-4">
                     <button id="notificationBtn" class="text-gray-600 hover:text-gray-900">
@@ -96,7 +97,8 @@
         <!-- Diary Selection -->
         <div id="diarySelection" class="mb-8 flex justify-center">
             <div class="bg-white rounded-lg shadow-sm border p-6 w-full max-w-md">
-                <h2 class="text-xl font-lora font-semibold text-gray-900 mb-4 text-center">Select or Create Diary</h2>
+                <h2 class="text-xl font-handwritten font-semibold text-matcha-dark mb-4 text-center">Select or Create
+                    Diary</h2>
 
                 <!-- Tunnel Bear Form Structure -->
                 <form class="w-full flex flex-col items-center gap-4" id="diaryForm">
@@ -169,7 +171,7 @@
                 <div class="bg-white rounded-lg shadow-sm border p-4 mb-6">
                     <div class="flex justify-between items-center">
                         <div>
-                            <h3 class="text-lg font-lora font-semibold text-gray-900">Current Diary: <span
+                            <h3 class="text-lg font-handwritten font-semibold text-matcha-dark">Current Diary: <span
                                     id="currentDiaryId"></span></h3>
                             <p class="text-sm text-gray-600">Type: <span id="currentDiaryType"></span> | Users:
                                 <span id="currentUsers"></span>
@@ -183,7 +185,7 @@
 
                 <!-- Entry Creation -->
                 <div class="bg-white rounded-lg shadow-sm border p-6 mb-6">
-                    <h3 class="text-lg font-lora font-semibold text-gray-900 mb-4">Write Today's Entry</h3>
+                    <h3 class="text-lg font-handwritten font-semibold text-matcha-dark mb-4">Write Today's Entry</h3>
                     <div class="mb-4">
                         <label for="entryDate" class="block text-sm font-medium text-gray-700 mb-2">Date</label>
                         <input type="date" id="entryDate"
@@ -194,7 +196,7 @@
                             Entry</label>
                         <textarea id="entryContent" rows="6"
                             placeholder="Write about your day, thoughts, or feelings..."
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-matcha-dark resize-none font-typewriter text-sm"></textarea>
                     </div>
                     <div class="mb-4">
                         <label for="entryPassword" class="block text-sm font-medium text-gray-700 mb-2">Password (to
@@ -210,7 +212,7 @@
 
                 <!-- Entry Unlocking -->
                 <div class="bg-white rounded-lg shadow-sm border p-6 mb-6">
-                    <h3 class="text-lg font-lora font-semibold text-gray-900 mb-4">Unlock Shared Entries</h3>
+                    <h3 class="text-lg font-handwritten font-semibold text-matcha-dark mb-4">Unlock Shared Entries</h3>
                     <div class="mb-4">
                         <label for="unlockDate" class="block text-sm font-medium text-gray-700 mb-2">Date to
                             Unlock</label>
@@ -229,7 +231,7 @@
                 <div id="timelineView" class="hidden">
                     <div class="bg-white rounded-lg shadow-sm border p-6">
                         <div class="flex justify-between items-center mb-6">
-                            <h3 class="text-lg font-lora font-semibold text-gray-900">Shared Timeline</h3>
+                            <h3 class="text-lg font-handwritten font-semibold text-matcha-dark">Shared Timeline</h3>
                             <div class="flex space-x-2">
                                 <button id="prevDayBtn" class="text-gray-600 hover:text-gray-900">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -263,7 +265,8 @@
         <div id="helpModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
             <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
                 <div class="mt-3">
-                    <h3 class="text-lg font-lora font-semibold text-gray-900 mb-4">How to Use Shared Diary</h3>
+                    <h3 class="text-lg font-handwritten font-semibold text-matcha-dark mb-4">How to Use Burner Diary
+                    </h3>
                     <div class="space-y-4 text-sm text-gray-700">
                         <div>
                             <h4 class="font-semibold text-gray-900">1. Create or Join a Diary</h4>

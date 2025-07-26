@@ -1,6 +1,6 @@
 {
-    "name": "Shared Diary for Connections",
-    "short_name": "Shared Diary",
+    "name": "Burner Diary",
+    "short_name": "Burner Diary",
     "description": "A private diary platform for couples, friends, and groups to write and share daily entries",
     "start_url": "/",
     "display": "standalone",
