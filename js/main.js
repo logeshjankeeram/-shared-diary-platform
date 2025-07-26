@@ -373,9 +373,21 @@ class DiaryUI {
         diarySelection.classList.add('hidden');
         diaryInterface.classList.remove('hidden');
 
+        // Force the interface to be visible
+        diaryInterface.style.display = 'flex';
+        diaryInterface.style.visibility = 'visible';
+        diaryInterface.style.opacity = '1';
+        diaryInterface.style.zIndex = '10';
+
         console.log('After transition:');
         console.log('diarySelection hidden:', diarySelection.classList.contains('hidden'));
         console.log('diaryInterface hidden:', diaryInterface.classList.contains('hidden'));
+
+        // Check if elements are actually visible
+        console.log('diarySelection display style:', window.getComputedStyle(diarySelection).display);
+        console.log('diaryInterface display style:', window.getComputedStyle(diaryInterface).display);
+        console.log('diaryInterface visibility:', window.getComputedStyle(diaryInterface).visibility);
+        console.log('diaryInterface opacity:', window.getComputedStyle(diaryInterface).opacity);
 
         // Update current diary info
         document.getElementById('currentDiaryId').textContent = this.currentDiary.diary_id;
@@ -391,6 +403,20 @@ class DiaryUI {
 
         // Add a visual confirmation
         this.showMessage('Welcome to your diary! You can now start writing entries.', 'success');
+
+        // Test: Try to manually show the interface
+        setTimeout(() => {
+            console.log('Testing manual interface visibility...');
+            const testInterface = document.getElementById('diaryInterface');
+            if (testInterface) {
+                testInterface.style.display = 'flex';
+                testInterface.style.visibility = 'visible';
+                testInterface.style.opacity = '1';
+                console.log('Manual visibility set for diaryInterface');
+            } else {
+                console.error('diaryInterface element not found!');
+            }
+        }, 1000);
 
         // Show timeline if there are unlocked entries
         if (window.diaryManager.timelineDates.length > 0) {
