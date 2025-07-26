@@ -181,7 +181,7 @@ class DiaryManager {
         this.updateTimelineNavigation();
     }
 
-    // Render couple timeline (side-by-side)
+    // Render iMessage-style timeline for couple
     renderCoupleTimeline(container, entries, date) {
         const users = this.currentDiary.users;
         const user1 = users[0];
@@ -190,56 +190,110 @@ class DiaryManager {
         const entry1 = entries.find(e => e.user_name === user1);
         const entry2 = entries.find(e => e.user_name === user2);
 
-        container.className = 'grid grid-cols-1 lg:grid-cols-2 gap-6 timeline-couple couple-theme';
-        container.innerHTML = `
-            <div class="timeline-entry entry-fade-in bg-white rounded-lg shadow-sm border p-6">
-                <div class="entry-header rounded-t-lg -mt-6 -mx-6 p-4 mb-4">
-                    <h4 class="font-lora font-semibold">${user1}</h4>
-                    <p class="text-sm opacity-90">${new Date(date).toLocaleDateString()}</p>
-                </div>
-                <div class="entry-content">
-                    ${entry1 ? this.highlightThemes(entry1.content) : '<p class="text-gray-500 italic">No entry yet</p>'}
-                </div>
-            </div>
-            <div class="timeline-entry entry-fade-in bg-white rounded-lg shadow-sm border p-6">
-                <div class="entry-header rounded-t-lg -mt-6 -mx-6 p-4 mb-4">
-                    <h4 class="font-lora font-semibold">${user2}</h4>
-                    <p class="text-sm opacity-90">${new Date(date).toLocaleDateString()}</p>
-                </div>
-                <div class="entry-content">
-                    ${entry2 ? this.highlightThemes(entry2.content) : '<p class="text-gray-500 italic">No entry yet</p>'}
-                </div>
-            </div>
-        `;
+        // Create iMessage container
+        container.className = 'imessage-container';
 
-        // Setup synchronized scrolling
-        this.setupSyncScrolling(container);
+        // Add date header
+        const dateHeader = document.createElement('div');
+        dateHeader.className = 'text-center text-gray-500 text-sm mb-4';
+        dateHeader.textContent = new Date(date).toLocaleDateString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        container.appendChild(dateHeader);
+
+        // Create message bubbles
+        [entry1, entry2].forEach((entry, index) => {
+            if (!entry) return;
+
+            const messageBubble = document.createElement('div');
+            const isCurrentUser = entry.user_name === this.currentUser;
+
+            messageBubble.className = `imessage-bubble ${isCurrentUser ? 'imessage-bubble-right' : 'imessage-bubble-left'} cursor-pointer`;
+            messageBubble.setAttribute('data-full-content', entry.content);
+
+            // Create blurred preview with first and last words visible
+            const words = entry.content.split(' ');
+            if (words.length <= 2) {
+                // If only 1-2 words, show all
+                messageBubble.innerHTML = `<span class="message-preview">${entry.content}</span>`;
+            } else {
+                // Show first and last words, blur the middle
+                const firstWord = words[0];
+                const lastWord = words[words.length - 1];
+                const middleWords = words.slice(1, -1).join(' ');
+
+                messageBubble.innerHTML = `
+                    <span class="message-preview">${firstWord}</span>
+                    <span class="blur-preview"> ${middleWords} </span>
+                    <span class="message-preview">${lastWord}</span>
+                `;
+            }
+
+            // Add click handler
+            messageBubble.addEventListener('click', () => {
+                this.showFullMessageModal(entry.content, entry.user_name);
+            });
+
+            container.appendChild(messageBubble);
+        });
     }
 
-    // Render group timeline (stacked)
+    // Render iMessage-style timeline for group
     renderGroupTimeline(container, entries, date) {
-        container.className = 'space-y-6 timeline-group group-theme';
+        // Create iMessage container
+        container.className = 'imessage-container';
 
+        // Add date header
+        const dateHeader = document.createElement('div');
+        dateHeader.className = 'text-center text-gray-500 text-sm mb-4';
+        dateHeader.textContent = new Date(date).toLocaleDateString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        container.appendChild(dateHeader);
+
+        // Create message bubbles for each user
         const users = this.currentDiary.users;
-        let html = '';
-
         users.forEach(user => {
             const entry = entries.find(e => e.user_name === user);
+            if (!entry) return;
 
-            html += `
-                <div class="timeline-entry entry-fade-in bg-white rounded-lg shadow-sm border p-6">
-                    <div class="entry-header rounded-t-lg -mt-6 -mx-6 p-4 mb-4">
-                        <h4 class="font-lora font-semibold">${user}</h4>
-                        <p class="text-sm opacity-90">${new Date(date).toLocaleDateString()}</p>
-                    </div>
-                    <div class="entry-content">
-                        ${entry ? this.highlightThemes(entry.content) : '<p class="text-gray-500 italic">No entry yet</p>'}
-                    </div>
-                </div>
-            `;
+            const messageBubble = document.createElement('div');
+            const isCurrentUser = entry.user_name === this.currentUser;
+
+            messageBubble.className = `imessage-bubble ${isCurrentUser ? 'imessage-bubble-right' : 'imessage-bubble-left'} cursor-pointer`;
+            messageBubble.setAttribute('data-full-content', entry.content);
+
+            // Create blurred preview with first and last words visible
+            const words = entry.content.split(' ');
+            if (words.length <= 2) {
+                // If only 1-2 words, show all
+                messageBubble.innerHTML = `<span class="message-preview">${entry.content}</span>`;
+            } else {
+                // Show first and last words, blur the middle
+                const firstWord = words[0];
+                const lastWord = words[words.length - 1];
+                const middleWords = words.slice(1, -1).join(' ');
+
+                messageBubble.innerHTML = `
+                    <span class="message-preview">${firstWord}</span>
+                    <span class="blur-preview"> ${middleWords} </span>
+                    <span class="message-preview">${lastWord}</span>
+                `;
+            }
+
+            // Add click handler
+            messageBubble.addEventListener('click', () => {
+                this.showFullMessageModal(entry.content, entry.user_name);
+            });
+
+            container.appendChild(messageBubble);
         });
-
-        container.innerHTML = html;
     }
 
     // Setup synchronized scrolling for couple timeline
@@ -443,6 +497,37 @@ class DiaryManager {
             `;
             container.appendChild(div);
         });
+    }
+
+    // Show full message modal
+    showFullMessageModal(content, userName) {
+        const modal = document.createElement('div');
+        modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+        modal.innerHTML = `
+            <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold text-matcha-dark">${userName}'s Message</h3>
+                    <button class="text-gray-500 hover:text-gray-700 text-xl">&times;</button>
+                </div>
+                <div class="text-gray-700 whitespace-pre-wrap mb-4 bg-gray-50 p-4 rounded-lg">${content}</div>
+                <button class="bg-matcha-medium text-white px-4 py-2 rounded-md hover:bg-matcha-dark w-full">Close</button>
+            </div>
+        `;
+
+        const closeModal = () => {
+            document.body.removeChild(modal);
+        };
+
+        modal.querySelector('button').addEventListener('click', closeModal);
+        modal.querySelector('.text-xl').addEventListener('click', closeModal);
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        document.body.appendChild(modal);
     }
 
     // Reset diary manager

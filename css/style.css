@@ -269,6 +269,48 @@ html {
     }
 }
 
+/* iMessage Styles */
+.imessage-bubble {
+    max-width: 70%;
+    word-wrap: break-word;
+    position: relative;
+    margin-bottom: 8px;
+}
+
+.imessage-bubble-left {
+    align-self: flex-start;
+    background-color: #e5e5ea;
+    color: #000;
+    border-radius: 18px 18px 18px 4px;
+    padding: 8px 12px;
+}
+
+.imessage-bubble-right {
+    align-self: flex-end;
+    background-color: #007aff;
+    color: #fff;
+    border-radius: 18px 18px 4px 18px;
+    padding: 8px 12px;
+}
+
+.imessage-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 400px;
+    background-color: #f2f2f7;
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.blur-preview {
+    filter: blur(3px);
+    user-select: none;
+}
+
+.message-preview {
+    font-weight: 500;
+}
+
 /* Print styles for PDF export */
 @media print {
     .no-print {

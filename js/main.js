@@ -465,14 +465,14 @@ class DiaryUI {
         if (!this.validateEntryInputs(date, content, password)) return;
 
         try {
-            this.showLoading('Submitting entry...');
+            this.showLoading('Sending message...');
             await window.diaryManager.createEntry(date, content, password);
 
             // Clear form
             document.getElementById('entryContent').value = '';
             document.getElementById('entryPassword').value = '';
 
-            this.showMessage('Entry submitted successfully! It will be unlocked when all users share their passwords.', 'success');
+            this.showMessage('Message sent! It will be unlocked when all users share their passwords.', 'success');
         } catch (error) {
             this.showMessage(error.message, 'error');
         } finally {
