@@ -4,14 +4,15 @@
 class TunnelBear {
     constructor() {
         console.log('TunnelBear constructor called');
-        this.currentFocus = 'EMAIL';
+        this.currentFocus = 'NONE'; // Start with no focus
         this.currentBearImage = null;
         this.isAnimating = false;
-        this.prevFocus = 'EMAIL';
+        this.prevFocus = 'NONE';
         this.prevShowPassword = false;
         this.timeouts = [];
         this.emailLength = 0;
         this.showPassword = false;
+        this.isVisible = false; // Track if bear is visible
 
         // Bear image sequences
         this.watchBearImages = [];
@@ -31,11 +32,10 @@ class TunnelBear {
         this.setupEventListeners();
         console.log('Event listeners set up');
 
-        // Set initial bear image to watching state
-        const initialImage = this.watchBearImages[0] || '';
-        console.log('Setting initial bear image to:', initialImage);
-        this.setCurrentBearImage(initialImage);
-        console.log('Initial bear image set');
+        // Start with no bear visible
+        console.log('Starting with no bear visible');
+        this.hideBear();
+        console.log('Initial state set');
     }
 
     loadBearImages() {
@@ -79,13 +79,12 @@ class TunnelBear {
 
         if (bearContainer) {
             const bearImg = document.createElement('img');
-            const initialImage = this.watchBearImages[0];
-            console.log('Setting bear initial image to:', initialImage);
-            bearImg.src = initialImage;
+            bearImg.src = this.watchBearImages[0];
             bearImg.className = 'tunnel-bear-avatar';
             bearImg.alt = 'Animated bear avatar';
             bearImg.width = 130;
             bearImg.height = 130;
+            bearImg.style.opacity = '0'; // Start hidden
 
             bearContainer.appendChild(bearImg);
             this.bearElement = bearImg;
@@ -98,20 +97,12 @@ class TunnelBear {
     }
 
     setupEventListeners() {
-        // Single focusin listener that handles both regular focus and sensitive field focus
+        // Handle field focus events
         document.addEventListener('focusin', (e) => {
             if (e.target.matches('input, textarea')) {
                 const fieldType = this.getFieldType(e.target);
                 console.log('Field focused:', e.target.id, fieldType);
-
-                // Handle regular focus behavior
                 this.handleFieldFocus(e.target);
-
-                // Trigger hide animation when focusing on sensitive fields
-                if (fieldType === 'diaryId' || fieldType === 'userPassword') {
-                    console.log('Triggering hide animation for sensitive field:', fieldType);
-                    this.handleSensitiveFieldFocus(e.target);
-                }
             }
         });
 
@@ -137,7 +128,7 @@ class TunnelBear {
         // Background tap to reset
         document.addEventListener('click', (e) => {
             if (e.target === document.body || e.target.matches('main')) {
-                this.resetToEmail();
+                this.handleBackgroundClick();
             }
         });
     }
@@ -146,22 +137,24 @@ class TunnelBear {
         const fieldType = this.getFieldType(field);
         console.log('Field focus:', field.id, fieldType);
 
-        if (fieldType === 'diaryId' || fieldType === 'userName') {
-            this.setCurrentFocus('EMAIL');
-        } else if (fieldType === 'password' || fieldType === 'userPassword') {
-            this.setCurrentFocus('PASSWORD');
+        if (fieldType === 'userName') {
+            // Click on name field: start watch bear from watch_bear_1
+            this.startWatchingFromBeginning();
+        } else if (fieldType === 'diaryId') {
+            // Click on diary field: start hide bear from hide_bear_1 to hide_bear_5
+            this.startHidingSequence();
+        } else if (fieldType === 'userPassword') {
+            // Click on password field: stay on hide_bear_5
+            this.stayOnHideBear5();
         }
     }
 
     handleFieldBlur(field) {
         const fieldType = this.getFieldType(field);
+        console.log('Field blur:', field.id, fieldType);
 
-        if (fieldType === 'diaryId' || fieldType === 'userName') {
-            // Keep email focus for diary ID and userName fields
-        } else if (fieldType === 'password' || fieldType === 'userPassword') {
-            // Reset to email focus when leaving password fields
-            this.setCurrentFocus('EMAIL');
-        }
+        // When leaving a field, don't change the bear state
+        // The bear stays in its current state until another field is focused
     }
 
     handleFieldInput(field) {
@@ -174,36 +167,68 @@ class TunnelBear {
         }
     }
 
-    handleSensitiveFieldFocus(field) {
-        const fieldType = this.getFieldType(field);
-        console.log('Sensitive field focused:', field.id, fieldType);
-        console.log('Hide bear images available:', this.hideBearImages.length);
-        console.log('Peak bear images available:', this.peakBearImages.length);
-        console.log('Current bear element:', this.bearElement);
-
-        // Trigger hide bear animation for sensitive fields (following original tunnel bear logic)
-        if (fieldType === 'diaryId' || fieldType === 'userPassword') {
-            console.log('Starting hide animation...');
-            console.log('Hide bear images:', this.hideBearImages);
-
-            // Check if images are loaded
-            if (this.hideBearImages.length === 0) {
-                console.error('No hide bear images loaded!');
-                return;
-            }
-
-            // First time entering sensitive field - animate hide bear images
-            this.animateImages(this.hideBearImages, 150, false, () => {
-                console.log('Hide animation complete, starting peak animation...');
-                // After hiding, show peak animation briefly then return to watching
-                this.animateImages(this.peakBearImages, 200, false, () => {
-                    console.log('Peak animation complete, returning to watching...');
-                    setTimeout(() => {
-                        this.animateWatchingBearImages();
-                    }, 500);
-                });
-            });
+    // Show bear with fade in
+    showBear() {
+        if (this.bearElement) {
+            this.bearElement.style.opacity = '1';
+            this.bearElement.style.transition = 'opacity 0.3s ease-in-out';
+            this.isVisible = true;
         }
+    }
+
+    // Hide bear with fade out
+    hideBear() {
+        if (this.bearElement) {
+            this.bearElement.style.opacity = '0';
+            this.bearElement.style.transition = 'opacity 0.3s ease-in-out';
+            this.isVisible = false;
+        }
+    }
+
+    // Start watching from watch_bear_1
+    startWatchingFromBeginning() {
+        console.log('Starting watch sequence from beginning...');
+        this.showBear();
+        this.clearTimeouts();
+
+        // Start from watch_bear_1 (index 1)
+        this.animateImages(this.watchBearImages.slice(1), 100, false, () => {
+            console.log('Watch sequence complete');
+        });
+    }
+
+    // Start hiding sequence from hide_bear_1 to hide_bear_5
+    startHidingSequence() {
+        console.log('Starting hide sequence...');
+        this.showBear();
+        this.clearTimeouts();
+
+        // Start from hide_bear_1 (index 1) to hide_bear_5 (index 5)
+        this.animateImages(this.hideBearImages.slice(1, 6), 150, false, () => {
+            console.log('Hide sequence complete, staying on hide_bear_5');
+            this.setCurrentBearImage(this.hideBearImages[5]); // Stay on hide_bear_5
+        });
+    }
+
+    // Stay on hide_bear_5
+    stayOnHideBear5() {
+        console.log('Staying on hide_bear_5...');
+        this.showBear();
+        this.setCurrentBearImage(this.hideBearImages[5]);
+    }
+
+    // Handle background click: start peak then go to watch
+    handleBackgroundClick() {
+        console.log('Background clicked, starting peak then watch...');
+        this.showBear();
+        this.clearTimeouts();
+
+        this.animateImages(this.peakBearImages, 200, false, () => {
+            console.log('Peak sequence complete, going to watch...');
+            setTimeout(() => {
+                this.startWatchingFromBeginning();
+            }, 300);
+        });
     }
 
     handlePasswordToggle(button) {
