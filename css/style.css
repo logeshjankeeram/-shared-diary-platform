@@ -1,6 +1,6 @@
 /* Custom styles for Shared Diary Platform */
 
-/* Background image */
+/* Background image with optimized loading */
 body {
     background: url('/assets/forest.png') no-repeat center center fixed !important;
     background-size: cover !important;
@@ -10,14 +10,23 @@ body {
     padding: 0;
     color: #2d5016;
     transition: all 0.3s ease;
+    /* Optimize background loading */
+    background-attachment: scroll !important;
+    will-change: background-image;
 }
 
-/* Mobile-specific background adjustments */
+/* Mobile-specific background adjustments with optimized loading */
 @media (max-width: 768px) {
     body {
         background: url('/assets/phone.png') no-repeat center center fixed !important;
         background-size: cover !important;
         background-position: center center !important;
+        /* Mobile optimizations */
+        background-attachment: scroll !important;
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
     }
 }
 
@@ -27,6 +36,10 @@ body {
         background: url('/assets/phone.png') no-repeat center center fixed !important;
         background-size: cover !important;
         background-position: center center !important;
+        /* Additional mobile optimizations */
+        background-attachment: scroll !important;
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
     }
 }
 

@@ -255,12 +255,11 @@ class TunnelBear {
 
     getFieldType(field) {
         const id = field.id || '';
-        if (id === 'joinDiaryId' || id === 'createDiaryId') return 'diaryId';
+        if (id === 'joinDiaryId' || id === 'createDiaryId') return 'userName'; // Changed from 'diaryId' to 'userName' to trigger watch animation
         if (id === 'createUserName') return 'userName';
         if (id === 'joinUserPassword' || id === 'createUserPassword') return 'userPassword';
         if (id === 'entryPassword') return 'password';
         if (id === 'entryContent') return 'content';
-        if (id === 'feedbackName' || id === 'feedbackEmail' || id === 'feedbackMessage') return 'feedback';
         return 'text';
     }
 

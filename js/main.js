@@ -17,17 +17,19 @@ class DiaryUI {
         this.setMobileBackground();
     }
 
-    // Set mobile background image
+    // Set mobile background image with optimization
     setMobileBackground() {
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         const isSmallScreen = window.innerWidth <= 768;
 
-        if (isMobile || isSmallScreen) {
-            document.body.style.backgroundImage = "url('/assets/phone.png')";
-            console.log('Mobile device detected, using phone.png background');
-        } else {
-            document.body.style.backgroundImage = "url('/assets/forest.png')";
-            console.log('Desktop device detected, using forest.png background');
+        // Cache the current background to avoid unnecessary updates
+        const currentBackground = document.body.style.backgroundImage;
+        const targetBackground = (isMobile || isSmallScreen) ? "url('/assets/phone.png')" : "url('/assets/forest.png')";
+
+        // Only update if background is different
+        if (currentBackground !== targetBackground) {
+            document.body.style.backgroundImage = targetBackground;
+            console.log(isMobile || isSmallScreen ? 'Mobile device detected, using phone.png background' : 'Desktop device detected, using forest.png background');
         }
     }
 
@@ -70,10 +72,15 @@ class DiaryUI {
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => this.handleKeyboardShortcuts(e));
 
-        // Window resize for background switching
-        window.addEventListener('resize', () => this.setMobileBackground());
+        // Window resize for background switching with debouncing
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => this.setMobileBackground(), 150);
+        });
         window.addEventListener('orientationchange', () => {
-            setTimeout(() => this.setMobileBackground(), 100);
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => this.setMobileBackground(), 200);
         });
     }
 
