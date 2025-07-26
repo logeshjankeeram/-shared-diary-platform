@@ -123,9 +123,40 @@ exports.handler = async (event, context) => {
     }
 
     try {
-        const { action, ...data } = JSON.parse(event.body || '{}');
+        console.log('Raw event body:', event.body);
+        console.log('Event body type:', typeof event.body);
+
+        let parsedBody;
+        try {
+            parsedBody = JSON.parse(event.body || '{}');
+        } catch (parseError) {
+            console.error('JSON parse error:', parseError);
+            return {
+                statusCode: 400,
+                headers: corsHeaders,
+                body: JSON.stringify({
+                    error: 'Invalid JSON in request body',
+                    details: parseError.message,
+                    receivedBody: event.body
+                })
+            };
+        }
+
+        const { action, ...data } = parsedBody;
         console.log('Parsed action:', action);
         console.log('Parsed data:', data);
+
+        if (!action) {
+            console.error('No action provided in request');
+            return {
+                statusCode: 400,
+                headers: corsHeaders,
+                body: JSON.stringify({
+                    error: 'No action provided',
+                    receivedData: parsedBody
+                })
+            };
+        }
 
         switch (action) {
             case 'test':
